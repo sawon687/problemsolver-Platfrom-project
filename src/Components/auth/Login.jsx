@@ -1,7 +1,33 @@
+'use client'
 import React from 'react';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
 
 const Login = () => {
+    const {
+      register,
+      handleSubmit,
+     
+    } = useForm()
+const handleLogin = async (data) => {
+  console.log('data',data)
+  const result = await signIn("credentials", {
+    redirect: true,   // client side handle
+    email: data.userEmail,
+    password: data.password,
+     callbackUrl: "/"
+  });
+
+  if (result?.error) {
+    console.log("Login failed:", result.error);
+  } else {
+    console.log("Login success!");
+    // Login successful, redirect manually
+    
+  }
+};
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-green-300 px-4">
       
@@ -16,7 +42,7 @@ const Login = () => {
         </p>
 
         {/* Form */}
-        <form className="space-y-5">
+        <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
           
           {/* Email */}
           <div>
@@ -27,6 +53,7 @@ const Login = () => {
               type="email"
               placeholder="Enter your email"
               className="input input-bordered w-full focus:border-2 focus:border-green-500"
+              {...register('userEmail')}
             />
           </div>
 
@@ -39,6 +66,7 @@ const Login = () => {
               type="password"
               placeholder="Enter your password"
               className="input input-bordered w-full  outline-0 focus:border-2 focus:border-green-500"
+              {...register('password')}
             />
           </div>
 
@@ -54,7 +82,7 @@ const Login = () => {
           </div>
 
           {/* Button */}
-          <button className="btn btn-primary w-full mt-4">
+          <button type='submit' className="btn btn-primary w-full mt-4">
             Login
           </button>
         </form>

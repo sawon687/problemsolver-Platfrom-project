@@ -43,7 +43,7 @@ const Banner = () => {
     <div className="px-4">
 
     <div
-      className="relative w-[1400px] h-80 md:h-[600px] rounded-xl shadow-2xl overflow-hidden"
+      className="relative w-[1400px] h-80 md:h-[600px] z-0 rounded-xl shadow-2xl overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >

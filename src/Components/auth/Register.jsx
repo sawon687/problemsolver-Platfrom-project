@@ -1,4 +1,5 @@
 'use client'
+import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 const countryCodes = [
@@ -14,10 +15,54 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm()
-      const [selectedCode, setSelectedCode] = useState("+880");
-  const [phone, setPhone] = useState("");
-
   
+      const [selectedCode, setSelectedCode] = useState(' ');
+
+
+  const hadleRegister=async(data)=>{
+    console.log('click')
+     const profileImage = data.userPhoto?.[0];
+     if (!profileImage) {
+  alert("Please select a profile image");
+  return;
+}
+       const formData = new FormData();
+      formData.append('image', profileImage);
+        const imageApiUrl = `https://api.imgbb.com/1/upload?&key=${process.env.NEXT_PUBLIC_IMAGE_API_KEY}`;
+         const  res=await fetch(imageApiUrl,{
+            method:"POST",
+            body:formData
+         })
+         const result = await res.json();
+       const photourl=result.data.display_url;
+        console.log('imgeurl',photourl)
+        console.log(photourl)
+          data.userPhoto=photourl
+
+          console.log('data',data)
+
+
+          const response=await fetch('/api/sign-up',{
+              method:'POST',
+               headers: {
+                    'Content-Type': 'application/json'
+                      },
+                body: JSON.stringify(data)
+          })
+
+          const results = await response.json(); 
+         console.log('API Data:', results);
+         if(results.success)
+         {
+               await signIn("credentials", {
+            email: data.userEmail,
+             password: data.password, 
+               redirect: true,
+                callbackUrl: "/"
+                     });
+         }
+      
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200">
       <div className="w-full max-w-2xl bg-base-100 shadow-xl rounded-2xl p-8">
@@ -31,7 +76,7 @@ const Register = () => {
   </p>
 </div>
 
-        <form onSubmit={handleSubmit()} className="space-y-6">
+        <form onSubmit={handleSubmit(hadleRegister)} className="space-y-6">
           
           {/* Username */}
         <div className='grid gap-3 grid-cols-1 md:grid-cols-2'>
@@ -43,6 +88,7 @@ const Register = () => {
               type="text"
               placeholder="Enter username"
               className="input input-bordered w-full outline-0 focus:border-2 focus:border-green-500"
+              {...register('username')}
             />
           </div>
            <div>
@@ -53,6 +99,7 @@ const Register = () => {
                 type="email"
                 placeholder="Enter email"
                 className="input input-bordered outline-0  w-full focus:border-2 focus:border-green-500"
+                 {...register('userEmail')}
               />
             </div>
         </div>
@@ -65,25 +112,14 @@ const Register = () => {
             <input
               type="file"
               className="file-input  file-input-bordered outline-0  w-full focus:border-2 focus:border-green-500"
+               {...register('userPhoto')}
             />
           </div>
 
-           <div>
-              <label className="label">
-                <span className="label-text">Skill</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Your skill"
-                className="input input-bordered outline-0  w-full focus:border-2 focus:border-green-500"
-              />
-            </div>
+           
           {/* Two Column Inputs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-           
-
-  <div>
+             <div>
       <label className="label">
         <span className="label-text font-medium">Phone</span>
       </label>
@@ -95,9 +131,9 @@ const Register = () => {
           onChange={(e) => setSelectedCode(e.target.value)}
           className="select  rounded-r-none w-28 outline-none focus:border-2 focus:border-green-500"
         >
-          {countryCodes.map((c) => (
-            <option key={c.code} value={c.code}>
-              {c.name} ({c.code})
+          {countryCodes?.map((c,i) => (
+            <option key={i} value={c?.code}>
+              {c?.name} ({c?.code})
             </option>
           ))}
         </select>
@@ -105,11 +141,12 @@ const Register = () => {
         {/* Phone number input */}
         <input
           type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          defaultValue={selectedCode}
           placeholder="Phone number"
           className="input  outline-none rounded-l-none flex-1 focus:border-2 focus:border-green-500"
+          {...register('phoneno')}
         />
+         
       </div>
     </div>
 
@@ -122,15 +159,14 @@ const Register = () => {
     min="0"
     placeholder="Enter your hourly rate"
     className="input input-bordered w-full outline-0 focus:border-2 focus:border-green-500"
+     {...register('HourlyRate')}
   />
 </div>
-
-
-           
-
           </div>
-
-           <div>
+         
+         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          {/* password */}
+              <div>
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
@@ -138,10 +174,26 @@ const Register = () => {
                 type="password"
                 placeholder="Enter password"
                 className="input  outline-0  w-full focus:border-2 focus:border-green-500"
+                 {...register('password')}
               />
+              
             </div>
+            {/* Skill */}
+            <div>
+              <label className="label">
+                <span className="label-text">Skill</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Your skill"
+                className="input input-bordered outline-0  w-full focus:border-2 focus:border-green-500"
+                {...register('Skill')}
+              />
+               
+            </div>
+         </div>
 
-          <button className="btn btn-primary w-full mt-6">
+          <button type='submit' className="btn btn-primary w-full mt-6">
             Register
           </button>
         </form>
