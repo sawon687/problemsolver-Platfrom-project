@@ -11,15 +11,17 @@ const Navbar = () => {
   const { data, status } = useSession();
   const [toggle, setToggle] = useState(false);
   const [mounted, setMounted] = useState(false);
+  console.log('data',data)
   const pathname=usePathname()
+
+  useEffect(() => setMounted(true), [setMounted]);
+
   if (!mounted || status === 'loading') return null;
-  if(pathname.startsWith('/Dashboard'))return null
-
-  useEffect(() => setMounted(true), []);
-
+  if(pathname.startsWith('/Dashboard'))return <></>
   const links = (
     <>
       <Navlink to="/" name="Home" />
+      <Navlink to="/Project" name="Project" />
       <Navlink to="/About" name="About" />
       <Navlink to="/Contact" name="Contact" />
     </>

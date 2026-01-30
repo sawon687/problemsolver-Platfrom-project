@@ -1,16 +1,34 @@
 'use client'
+import { useSession } from 'next-auth/react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 const ProjectCreate = () => {
-   
+   const {data:userInfo}=useSession()
+   console.log('data',userInfo?.user?._id)
+  
        const {
         register,
         handleSubmit,
         formState: { errors },
       } = useForm()
-   const handleCreate=(data)=>{
+   const handleCreate=async(data)=>{
+         
+         data.buyerId=userInfo?.user?._id
          console.log('data',data)
+         const response=await fetch('/api/Byuer-project',{
+            method:'POST',
+            headers: {
+                    'Content-Type': 'application/json'
+                      },
+                body: JSON.stringify(data)
+         })
+         const res=await response.json()
+         if(res.success)
+         {
+             alert(res.message)
+         }
+
    }
   return (
     <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
@@ -30,7 +48,7 @@ const ProjectCreate = () => {
           
             placeholder="Enter project title"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary  transition"
-             {...register('Project-Title')}
+             {...register('ProjectTitle')}
           />
         </div>
        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -45,7 +63,7 @@ const ProjectCreate = () => {
             
             placeholder="Enter project budget"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
-            {...register('Project-Budget')}
+            {...register('ProjectBudget')}
           />
         </div>
         {/* Category */}
@@ -58,7 +76,7 @@ const ProjectCreate = () => {
     name="category"
       
     className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary transition"
-      {...register('Project-Category')}
+      {...register('ProjectCategory')}
   >
     <option value="">Select project category</option>
     <option value="web-development">Web Development</option>
@@ -82,7 +100,7 @@ const ProjectCreate = () => {
             placeholder="Enter project description"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary  transition resize-none"
             rows={4}
-              {...register('Project-Description')}
+              {...register('ProjectDescription')}
           />
         </div>
 
@@ -96,7 +114,7 @@ const ProjectCreate = () => {
             name="deadline"
         
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary  transition"
-              {...register('Project-Deadline')}
+              {...register('ProjectDeadline')}
           />
         </div>
 

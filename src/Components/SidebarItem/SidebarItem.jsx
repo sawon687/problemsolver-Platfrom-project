@@ -10,6 +10,7 @@ const SidebarItem = ({ to, icon, label }) => {
     <li className="relative group">
       <Link
         href={to}
+        data-tip={label}
         className={
           `flex items-cente  gap-3 px-3 py-2 bg-base-100 rounded-md font-medium transition-all duration-300 shadow-lg ${
             isActive
