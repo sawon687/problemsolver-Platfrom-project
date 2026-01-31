@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 
 const ProjectCreate = () => {
    const {data:userInfo}=useSession()
-   console.log('data',userInfo?.user?._id)
+   console.log('data',userInfo?._id)
   
        const {
         register,
@@ -14,7 +14,7 @@ const ProjectCreate = () => {
       } = useForm()
    const handleCreate=async(data)=>{
          
-         data.buyerId=userInfo?.user?._id
+         data.buyerId=userInfo?._id
          console.log('data',data)
          const response=await fetch('/api/Byuer-project',{
             method:'POST',

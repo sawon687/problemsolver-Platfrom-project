@@ -32,30 +32,3 @@ export const POST=async(req)=>{
 // project get all
 
 
-export const GET = async (req) => {
-  try {
-  
-
-    const url = new URL(req.url);
-  
-    const id =url.id; 
-
-    const query = {};
-    if (id){
-       query.buyerId = id; 
-    }
-   
-    const result = await projectColl.find(query).toArray();
-    
-    return new Response(
-      JSON.stringify({ data: result, success: true }),
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error(error);
-    return new Response(
-      JSON.stringify({ success: false, message: "Project not found" }),
-      { status: 500 }
-    );
-  }
-};

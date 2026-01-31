@@ -20,7 +20,7 @@ export async function POST(req) {
         message:'User Register success fully',
         insertedId:result.insertedId,
         userEmail:userInfo.userEmail,
-        
+       
     })
    } catch (error) {
        console.error('database not connect',error)
