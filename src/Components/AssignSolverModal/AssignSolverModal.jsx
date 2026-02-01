@@ -4,11 +4,13 @@ import { motion, AnimatePresence } from "framer-motion";
 
  const AssignSolverModal=({ isOpen, onClose, id, requests })=> {
   if (!isOpen) return null;
-
+console.log('requsts',requests)
 const onAssign=async(solverId)=>{
+       console.log('solverID',solverId)
     const assignInfo={
        solverId
     }
+    console.log('solve id',solverId,assignInfo)
     const res=await fetch(`/api/Byuer-project/${id}`,{
         method: "POST",
   headers: {

@@ -1,11 +1,10 @@
 import connect from "@/lib/dbconnect";
+import { getServerSession } from "next-auth";
 
 const projectColl=connect('projectColl')
 export const GET = async (req) => {
   try {
   
-
-
     const result = await projectColl.find().toArray();
     
     return new Response(
@@ -20,3 +19,11 @@ export const GET = async (req) => {
     );
   }
 };
+
+
+
+
+
+
+
+

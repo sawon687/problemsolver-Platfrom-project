@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }) {
       <div className="px-4">Navbar Title</div>
     </nav>
     {/* Page content here */}
-    <div className="p-4">{children}</div>
+    <div className="bg-gray-100">{children}</div>
   </div>
 
   <div className="drawer-side is-drawer-close:overflow-visible">
@@ -38,6 +38,7 @@ export default function DashboardLayout({ children }) {
         
         <SidebarItem to='/Dashboard/CreateProject' label={'Create Project'}  ></SidebarItem>
         <SidebarItem to='/Dashboard/Project-list' label={'Project list'}  ></SidebarItem>
+        <SidebarItem to='/Dashboard/My-Requsts' label={'My Requsts'}  ></SidebarItem>
       </ul>
     </div>
   </div>

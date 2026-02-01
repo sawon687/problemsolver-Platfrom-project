@@ -2,8 +2,10 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
   import bcrypt from 'bcryptjs';
 import connect from "@/lib/dbconnect";
+
 export const authOptions = {
   // Configure one or more authentication providers
+    secret: process.env.NEXTAUTH_SECRET,
   providers: [
       CredentialsProvider({
       name: "Credentials",
@@ -13,7 +15,7 @@ export const authOptions = {
       },
     async authorize(credentials) {
   try {
-    const userColl = await connect('userColl');
+    const userColl =   connect('userColl');
     const user = await userColl.findOne({ userEmail: credentials.email });
      console.log('user',user)
     if (!user) return null;

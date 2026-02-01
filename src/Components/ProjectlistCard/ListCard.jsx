@@ -44,7 +44,7 @@ const ListCard = ({item}) => {
 
              {
                 ["assigned", "in-progress", "completed"].includes(item.status)&&(
-                     <Link href={'/Dashboard/Project-list/AssignDetails'}>
+                     <Link href={`/Dashboard/Project-list/${item._id}`}>
                      <button className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">
                     View Details
                        </button>

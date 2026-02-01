@@ -11,7 +11,7 @@ const Navbar = () => {
   const { data, status } = useSession();
   const [toggle, setToggle] = useState(false);
   const [mounted, setMounted] = useState(false);
-  console.log('data',data)
+  
   const pathname=usePathname()
 
   useEffect(() => setMounted(true), [setMounted]);

@@ -5,6 +5,7 @@ export const GET = async (req,{params}) => {
   try {
   
      const {id}=await params
+     
        if (!id){
             return new Response(JSON.stringify({message:'not fonded '}))
           }
@@ -13,7 +14,7 @@ export const GET = async (req,{params}) => {
     const result = await projectColl.find(query).toArray();
     
     return new Response(
-      JSON.stringify({ data: result, success: true }),
+      JSON.stringify({ data: result, success: true,message:"buyer project" }),
       { status: 200 }
     );
   } catch (error) {
@@ -25,7 +26,7 @@ export const GET = async (req,{params}) => {
   }
 };
 
-
+//  assigned project update status and assigned id
 export const  POST = async (req,{params}) => {
   try {
   

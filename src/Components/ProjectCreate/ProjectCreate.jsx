@@ -16,7 +16,7 @@ const ProjectCreate = () => {
          
          data.buyerId=userInfo?._id
          console.log('data',data)
-         const response=await fetch('/api/Byuer-project',{
+         const response=await fetch('/api/Project',{
             method:'POST',
             headers: {
                     'Content-Type': 'application/json'

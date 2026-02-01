@@ -6,15 +6,13 @@ import { useSession } from 'next-auth/react';
 const ByuerProjectList =() => {
 const {data:sesstion}=useSession()
 const [project,setProject]=useState([])
-console.log(sesstion)
-    useEffect(()=>{
-            
+
+    useEffect(()=>{  
        const getProjectlist=async()=>{
-        
         const id=sesstion?._id
         
         if(!id)return
-    const res=await fetch(`/api/Byuer-project/${id}`,{
+    const res=await fetch(`/api/Project/${id}`,{
         cache:'no-cache',
            credentials: "include", 
          headers: {
@@ -23,7 +21,7 @@ console.log(sesstion)
     })
 
     const result= await res.json()
-   console.log('resulsts',result)
+   
     setProject(result?.data|| [])
 }
 getProjectlist()

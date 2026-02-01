@@ -4,9 +4,7 @@ import Link from "next/link";
 
 const ProjectDetails = ({ project = {} }) => {
   console.log(project)
-  const handleRequset=()=>{
-     
-  }
+ 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       
