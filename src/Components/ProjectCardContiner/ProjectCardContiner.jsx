@@ -2,12 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import ProjectCard from '../ProjectCard/ProjectCard';
 
-const ProjectCardContiner = () => {
-    const [project,setProject]=useState([])
-
-    useEffect(()=>{
-         fetch(`/api/user-project`).then(res=> res.json()).then(data=> setProject(data.result)).catch(error=>console.log(error))
-    },[])
+const ProjectCardContiner = ({project}) => {
+  
 
     console.log(project)
     return (                               

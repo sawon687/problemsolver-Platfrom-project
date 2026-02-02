@@ -52,10 +52,11 @@ export const GET=async(req)=>{
         
 
        const solverId=session._id
-       const result=await projectColl.find({"requests.solverId":solverId}).toArray() 
+       const project=await projectColl.find({"requests.solverId":solverId}).toArray() 
     
     //    const projects=project.map(project=> project.requests).flat()
        
+     const result=project.map(({requests,...rest})=> rest)
        console.log('project',result)
      
         return new Response(JSON.stringify({result,success:true}))

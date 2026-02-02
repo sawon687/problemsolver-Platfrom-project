@@ -30,3 +30,33 @@ export const GET = async (req,{params}) => {
   }
 };
 
+//  project uploed user
+export const POST = async (req,{params}) => {
+  try {
+  
+     const {id}=await params;
+     const projectInfo=await req.josn();
+     
+       if (!ObjectId.isValid(id)){
+            return new Response(JSON.stringify({message:'not valid id'}))
+          }
+    const query = {_id:new ObjectId(id)}
+     const update={$push:{tasks:projectInfo}}
+    const result = await projectColl.insertOne(query,update)
+    
+    return new Response(
+      JSON.stringify({ data: result, success: true,message:'Task succesfully submited' },{
+        status:201
+      }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+    return new Response(
+      JSON.stringify({ success: false, message: "Task not submited" },{
+       
+      }),
+      { status: 401 }
+    );
+  }
+};

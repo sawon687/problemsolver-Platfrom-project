@@ -12,13 +12,14 @@ const UserProjectReq = () => {
         cache: 'no-cache',
       });
       const result = await res.json();
+      console.log('results',result)
       setProject(result.result || []);
     };
     handleRequest();
   }, []);
 
   return (
-    <div className="min-h-screen  py-10">
+    <div className="min-h-screen py-10">
       <div className="max-w-5xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">
@@ -76,13 +77,17 @@ const UserProjectReq = () => {
               </div>
 
               {/* Action Button */}
-              <div className="mt-6 flex justify-end">
-                <Link href={`/Dashboard/My-Requsts/${project._id}`}>
+                {
+                     project.status==='assigned'&&(
+                          <div className="mt-6 flex justify-end">
+                <Link href={`/Dashboard/My-Requsts/${project._id}/UploadedProject`}>
                   <button className="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition">
                      Submit Project
                   </button>
                 </Link>
               </div>
+                     )
+                }
             </div>
           ))}
         </div>
