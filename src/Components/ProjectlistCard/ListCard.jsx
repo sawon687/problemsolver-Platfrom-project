@@ -10,21 +10,21 @@ const ListCard = ({item}) => {
     // API call to assign solver to project
     setModalOpen(false);
     console.log('sawon',item)
+    console.log('item',item)
   };
     return (
       <tr>
-        <th>1</th>
+        <th>{1+ 1}</th>
         <td>{item?.ProjectTitle}</td>
         <td>{item?.ProjectDeadline}</td>
-        <td>{item?.ProjectBudget}</td>
-        <td>{item?.status}</td>
+        <td>{item?.ProjectBudget}</td><td  ><p className={`w-20 py-1 text-center rounded-2xl ${item?.status==='assigned'?'bg-green-200 text-primary':item.status==='unassigned'?'bg-gray-300 text-gray-600':'bg-amber-200 text-amber-500'}`}>{item.status}</p></td>
         <td>
 
              {
-                   item?.status==='unassigned'&&(
+                   item?.status==='unassigned'&& (
                     <>
                       <button
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        className="bg-green-500 text-white px-4 py-                            2 rounded hover:bg-green-600"
                        onClick={() => setModalOpen(true)}
                    >
                       Assign Problem Solver

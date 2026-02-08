@@ -2,7 +2,7 @@ import UserProjectReq from '@/Components/UserProjectPage/UserProjectReq';
 import React from 'react';
 
 const page = () => {
-    return (
+        return (
         <div className=''>
           
             <UserProjectReq></UserProjectReq>

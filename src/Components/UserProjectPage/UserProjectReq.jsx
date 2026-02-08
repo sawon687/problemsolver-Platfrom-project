@@ -7,99 +7,138 @@ const UserProjectReq = () => {
 
   useEffect(() => {
     const handleRequest = async () => {
-      const res = await fetch('/api/Project', {
+      const res = await fetch('/api/Project/user-Requsts', {
         method: 'GET',
         cache: 'no-cache',
       });
       const result = await res.json();
       console.log('results',result)
-      setProject(result.result || []);
+      setProject(result?.result || []);
     };
     handleRequest();
   }, []);
 
+  console.log(reqProject)
   return (
-    <div className="min-h-screen py-10">
-      <div className="max-w-5xl mx-auto px-4">
+  
+      <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
-        <div className="mb-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-green-600">
+        <div className="mb-8 pt-10 flex justify-between items-center">
+          <h1 className="text-4xl font-bold text-green-600">
             My Project Requests
           </h1>
           <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
             Total: {reqProject.length}
           </span>
+          </div>
+        
+   <div className="grid lg:grid-cols-2 gap-8 py-20 px-10">
+  {reqProject?.map((project) => {
+    const req = project.requests?.[0]; // 🔥 request data
+
+    return (
+      <div
+        key={project._id}
+        className="bg-white rounded-2xl border border-gray-200 shadow-md hover:shadow-2xl transition duration-300"
+      >
+        {/* Header */}
+        <div className="px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-t-2xl">
+          <h2 className="text-lg font-semibold">
+            {project.ProjectTitle}
+          </h2>
+          <p className="text-sm opacity-90">
+            Deadline: {project.ProjectDeadline}
+          </p>
         </div>
 
-        {/* Project Cards */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {reqProject.map((project) => (
-            <div
-              key={project._id}
-              className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition"
-            >
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                {project.ProjectTitle}
-              </h2>
+        {/* Body */}
+        <div className="p-6 space-y-5">
 
-              <p className="text-sm text-gray-500 mb-4">
-                {project.ProjectDescription?.slice(0, 100)}...
-              </p>
+          {/* Project Description */}
+          <div className="bg-green-50 p-4 rounded-xl border border-green-200">
+            <p className="text-gray-700">
+              <span className="font-semibold text-gray-900">
+                Project Description:
+              </span>{' '}
+              {project.ProjectDescription}
+            </p>
+          </div>
 
-              <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
-                <p>
-                  <span className="font-medium">Category:</span>{' '}
-                  {project.ProjectCategory}
+          {/* Project Meta */}
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="bg-gray-50 p-4 rounded-xl border">
+              <p className="font-semibold text-gray-600">Budget</p>
+              <p className="text-gray-900">${project.ProjectBudget}</p>
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded-xl border">
+              <p className="font-semibold text-gray-600">Category</p>
+              <p className="text-gray-900">{project.ProjectCategory}</p>
+            </div>
+          </div>
+
+          {/* Request Message */}
+          {req && (
+            <>
+              <div className="bg-gray-50 p-4 rounded-xl border">
+                <p className="text-gray-700">
+                  <span className="font-semibold text-gray-900">
+                    Request Message:
+                  </span>{' '}
+                  {req.message}
                 </p>
-                <p>
-                  <span className="font-medium">Budget:</span> $
-                  {project.ProjectBudget}
-                </p>
-                <p>
-                  <span className="font-medium">Deadline:</span>{' '}
-                  {project.ProjectDeadline}
-                </p>
-                <p>
-                  <span className="font-medium">Status:</span>{' '}
+              </div>
+
+              {/* Request Info */}
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="bg-gray-50 p-4 rounded-xl border">
+                  <p className="font-semibold text-gray-600">
+                    Expected Timeline
+                  </p>
+                  <p className="text-gray-900">{req.expectedTimeline}</p>
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-xl border">
+                  <p className="font-semibold text-gray-600">Request Status</p>
                   <span
-                    className={`px-2 py-1 rounded text-xs ml-1
+                    className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold
                       ${
-                        project.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : project.status === 'assigned'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-gray-100 text-gray-600'
+                        req.status === 'pending'
+                          ? 'bg-yellow-100 text-yellow-700':req.status==='in-progress'?'bg-green-200 text-green-500'
+                          : 'bg-green-100 text-green-700'
                       }`}
                   >
-                    {project.status}
+                    {req.status}
                   </span>
-                </p>
+                </div>
               </div>
+            </>
+          )}
 
-              {/* Action Button */}
-                {
-                     project.status==='assigned'&&(
-                          <div className="mt-6 flex justify-end">
-                <Link href={`/Dashboard/My-Requsts/${project._id}/UploadedProject`}>
-                  <button className="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition">
-                     Submit Project
-                  </button>
-                </Link>
-              </div>
-                     )
-                }
+          {/* Action Button (Project Assigned) */}
+          {req.status === 'in-progress' && (
+            <div className="pt-4 flex justify-end">
+              <Link
+                href={`/Dashboard/My-Requsts/${project._id}/UploadedProject`}
+              >
+                <button className="px-6 py-2 rounded-lg bg-primary text-white font-semibold shadow-md hover:bg-green-700 hover:scale-105 transition">
+                  Submit Project 🚀
+                </button>
+              </Link>
             </div>
-          ))}
+          )}
         </div>
-
-        {/* Empty State */}
-        {reqProject.length === 0 && (
-          <div className="text-center text-gray-500 mt-20">
-            No project requests found 🚀
-          </div>
-        )}
       </div>
-    </div>
+    );
+  })}
+</div>
+{
+  reqProject < 0 && <div>
+    <h1 className='text-center text-2xl text-blue-200'>Not found</h1>
+  </div>
+}
+</div>
+
   );
 };
 

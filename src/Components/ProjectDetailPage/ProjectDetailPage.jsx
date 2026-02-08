@@ -17,6 +17,7 @@ const ProjectDetailPage = ({ id }) => {
         const data = await res.json();
         console.log('data is',data.result)
         setProject(data.result);
+        console.log(data.result)
         console.log('solverid',project.assignedSolverId)
 
       

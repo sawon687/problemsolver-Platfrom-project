@@ -41,7 +41,7 @@ export const POST= async (req,{params}) => {
 
 
 
-export const GET= async (req,{params}) => {
+export const PATCH= async (req,{params}) => {
   try { 
      const requestsInfo=await req.json()
      const {id}= await params

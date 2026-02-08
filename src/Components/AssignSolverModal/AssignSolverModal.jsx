@@ -5,13 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
  const AssignSolverModal=({ isOpen, onClose, id, requests })=> {
   if (!isOpen) return null;
 console.log('requsts',requests)
-const onAssign=async(solverId)=>{
+const onAssign=async(solverId,reqstatus,projectStatus)=>{
        console.log('solverID',solverId)
+    
     const assignInfo={
-       solverId
+       solverId,
+       reqstatus,
+       projectStatus,
     }
     console.log('solve id',solverId,assignInfo)
-    const res=await fetch(`/api/Byuer-project/${id}`,{
+    const res=await fetch(`/api/Project/${id}`,{
         method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -58,7 +61,7 @@ const onAssign=async(solverId)=>{
                   <span className="font-medium text-gray-900">{solver?.expectedTimeline||'-'}</span>
                   <button
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                    onClick={() => onAssign(solver.solverId)}
+                    onClick={() => onAssign(solver.solverId,'in-progress','assign')}
                   >
                     Assign
                   </button>

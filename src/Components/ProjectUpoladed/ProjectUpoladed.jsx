@@ -9,8 +9,9 @@ const ProjectUpoladed = ({ id }) => {
   const [zipReady, setZipReady] = useState(false);
   const [zipTree, setZipTree] = useState(null);
   const [progress, setProgress] = useState(0);
+  const [loading,setLoading]=useState(false)
 
-  const { register, handleSubmit, setError, clearErrors, formState: { errors } } = useForm();
+  const { register, handleSubmit,reset, setError, clearErrors, formState: { errors } } = useForm();
 
   const handleZipChange = async (e) => {
     const file = e.target.files?.[0];
@@ -94,38 +95,54 @@ const ProjectUpoladed = ({ id }) => {
 
   // Submit
   const handleProjectUploaded = async(data) => {
-    if (!zipReady || !zipFile) return;
+    try {
+      if (!zipReady || !zipFile) return;
+      setLoading(true);
 
-    const flattenFiles = (node, path = '') => {
-      return Object.entries(node).flatMap(([key, value]) => {
-        const currentPath = path ? `${path}/${key}` : key;
-        return value === null ? [currentPath] : flattenFiles(value, currentPath);
+      const flattenFiles = (node, path = '') => {
+        return Object.entries(node).flatMap(([key, value]) => {
+          const currentPath = path ? `${path}/${key}` : key;
+          return value === null ? [currentPath] : flattenFiles(value, currentPath);
+        });
+      };
+
+      const fileList = zipTree ? flattenFiles(zipTree) : [];
+
+      const submitData = {
+        projectId: id,
+        gitRepositoryLink: data.gitRepositoryLink || '',
+        liveProjectUrl: data.LiveProUrl || '',
+        notes: data.notes || '',
+        zipMeta: {
+          name: zipFile.name,
+          size: zipFile.size,
+          type: zipFile.type,
+          totalFiles: fileList.length,
+          files: fileList,
+        },
+      
+      };
+
+      const res = await fetch(`/api/user-project/${id}`,{
+        method:'POST',
+         headers: { "Content-Type": "application/json" },
+        body:JSON.stringify(submitData)
       });
-    };
+      const result = await res.json();
 
-    const fileList = zipTree ? flattenFiles(zipTree) : [];
+      console.log('rsulst', result);
+      if (result.success) {
+        reset()
+        alert(result.message)
+        setLoading(false);
+      }
 
-    const submitData = {
-      projectId: id,
-      gitRepositoryLink: data.gitRepositoryLink || '',
-      liveProjectUrl: data.LiveProUrl || '',
-      notes: data.notes || '',
-      zipMeta: {
-        name: zipFile.name,
-        size: zipFile.size,
-        type: zipFile.type,
-        totalFiles: fileList.length,
-        files: fileList,
-      },
-      zipFile,
-    };
-
-    const res=await fetch(`/api/user-project/${id}`)
-    const result=await res.json()
-
-    console.log('rsulst',result)
-
-    console.log("✅ FINAL SUBMIT DATA:", submitData);
+      console.log("✅ FINAL SUBMIT DATA:", submitData);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -205,8 +222,9 @@ const ProjectUpoladed = ({ id }) => {
 
         {/* Submit */}
         <button type="submit"
+          disabled={loading}
           className="mt-4 bg-primary text-white px-6 py-2 rounded disabled:opacity-50">
-          Submit Project
+          {loading?'submiting...':'submit project'}
         </button>
       </form>
     </div>

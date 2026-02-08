@@ -39,11 +39,25 @@ export const  POST = async (req,{params}) => {
     const update = {
       $set: {
         assignedSolverId: assignInfo.solverId,
-        status: "assigned",
+        status:assignInfo.projectStatus,
+        "requests.$[req].status":assignInfo.reqstatus,
+      
+        
       },
+    
     };
 
-    const result = await projectColl.updateOne(query,update)
+    const options={
+        
+        arrayFilters:[
+          
+            {'req.solverId':assignInfo.solverId}
+          
+        ]
+      
+    }
+
+    const result = await projectColl.updateOne(query,update,options)
     
  return new Response(
       JSON.stringify({

@@ -31,32 +31,37 @@ export const GET = async (req,{params}) => {
 };
 
 //  project uploed user
-export const POST = async (req,{params}) => {
+export const POST = async (req, { params }) => {
   try {
-  
-     const {id}=await params;
-     const projectInfo=await req.josn();
-     
-       if (!ObjectId.isValid(id)){
-            return new Response(JSON.stringify({message:'not valid id'}))
-          }
-    const query = {_id:new ObjectId(id)}
-     const update={$push:{tasks:projectInfo}}
-    const result = await projectColl.insertOne(query,update)
-    
+    const { id } =await params;
+    const projectInfo = await req.json();
+
+    if (!ObjectId.isValid(id)) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Invalid ID" }),
+        { status: 400 }
+      );
+    }
+
+    const result = await projectColl.updateOne(
+      { _id: new ObjectId(id) },
+      { status:'pending',
+        $push: { tasks: projectInfo} }
+    );
+
     return new Response(
-      JSON.stringify({ data: result, success: true,message:'Task succesfully submited' },{
-        status:201
+      JSON.stringify({
+        success: true,
+        message: "Task successfully submitted",
+        data: result
       }),
-      { status: 200 }
+      { status: 201 }
     );
   } catch (error) {
     console.error(error);
     return new Response(
-      JSON.stringify({ success: false, message: "Task not submited" },{
-       
-      }),
-      { status: 401 }
+      JSON.stringify({ success: false, message: "Task not submitted" }),
+      { status: 500 }
     );
   }
 };
