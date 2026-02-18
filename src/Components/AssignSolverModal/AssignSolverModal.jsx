@@ -5,13 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
  const AssignSolverModal=({ isOpen, onClose, id, requests })=> {
   if (!isOpen) return null;
 console.log('requsts',requests)
-const onAssign=async(solverId,reqstatus,projectStatus)=>{
+const onAssign=async(solverId,reqstatus,action)=>{
        console.log('solverID',solverId)
     
     const assignInfo={
        solverId,
        reqstatus,
-       projectStatus,
+       action,
     }
     console.log('solve id',solverId,assignInfo)
     const res=await fetch(`/api/Project/${id}`,{
@@ -61,7 +61,7 @@ const onAssign=async(solverId,reqstatus,projectStatus)=>{
                   <span className="font-medium text-gray-900">{solver?.expectedTimeline||'-'}</span>
                   <button
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                    onClick={() => onAssign(solver.solverId,'in-progress','assign')}
+                    onClick={() => onAssign(solver.solverId,'in-progress','assigned')}
                   >
                     Assign
                   </button>

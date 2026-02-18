@@ -10,10 +10,11 @@ const statusStyle = {
 
 const TaskCard = ({ task }) => {
   // Determine status dynamically
+console.log('task',task)
   const status = task.submission
-    ? task.status === "accepted" || task.status === "rejected"
+    ? task.status === "Accept" || task.status === "Reject"
       ? task.status
-      : "submitted"
+      : "submit"
     : "in-progress";
 
   return (

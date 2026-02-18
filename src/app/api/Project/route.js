@@ -1,13 +1,13 @@
 import connect from "@/lib/dbconnect";
-import { ObjectId } from "mongodb";
 
-const userColl=connect('userColl')
-export const GET = async (res,req) => {
+const projectColl=connect('projectColl')
+export const GET = async (req) => {
   try {
+  
+    const result = await projectColl.find().toArray();
     
-    const result = await userColl.find().toArray()
     return new Response(
-      JSON.stringify({ data: result, success: true }),
+      JSON.stringify({ result, success: true }),
       { status: 200 }
     );
   } catch (error) {
@@ -18,4 +18,3 @@ export const GET = async (res,req) => {
     );
   }
 };
-

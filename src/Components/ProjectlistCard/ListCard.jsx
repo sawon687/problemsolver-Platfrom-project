@@ -3,70 +3,99 @@ import React, { useState } from 'react';
 import AssignSolverModal from '../AssignSolverModal/AssignSolverModal';
 import Link from 'next/link';
 
-const ListCard = ({item}) => {
-    const [modalOpen, setModalOpen] = useState(false);
-    const handleAssign = (solverId) => {
-    console.log("Assigned solver id:", solverId);
-    // API call to assign solver to project
+const ListCard = ({ item, index }) => {
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleAssign = (solverId) => {
+    console.log("Assigned solver:", solverId);
     setModalOpen(false);
-    console.log('sawon',item)
-    console.log('item',item)
   };
-    return (
-      <tr>
-        <th>{1+ 1}</th>
-        <td>{item?.ProjectTitle}</td>
-        <td>{item?.ProjectDeadline}</td>
-        <td>{item?.ProjectBudget}</td><td  ><p className={`w-20 py-1 text-center rounded-2xl ${item?.status==='assigned'?'bg-green-200 text-primary':item.status==='unassigned'?'bg-gray-300 text-gray-600':'bg-amber-200 text-amber-500'}`}>{item.status}</p></td>
-        <td>
 
-             {
-                   item?.status==='unassigned'&& (
-                    <>
-                      <button
-                        className="bg-green-500 text-white px-4 py-                            2 rounded hover:bg-green-600"
-                       onClick={() => setModalOpen(true)}
-                   >
-                      Assign Problem Solver
-                      </button>
+  const statusStyle = {
+    assigned: "bg-green-100 text-green-700",
+    unAssigned: "bg-gray-100 text-gray-600",
+    "in-progress": "bg-blue-100 text-blue-700",
+    completed: "bg-purple-100 text-purple-700",
+    pending: "bg-yellow-100 text-yellow-700",
+    submitted: "bg-amber-100 text-amber-700"
+  };
 
-                      <AssignSolverModal
-                           isOpen={modalOpen}
-                           onClose={() => setModalOpen(false)}
-                           requests={item.requests}
-                            id={item._id}
-                             onAssign={handleAssign}
-                          />
-                    </>
-                   )
-             }
+  return (
+    <tr className="hover:bg-gray-50 border border-green-300 transition">
 
+      {/* INDEX */}
+      <td className="px-6 py-4 text-green-500 ">
+       <p className='bg-green-200 text-center py-2 rounded-xl '>   {index + 1}</p>
+      </td>
 
-             {
-                ["assigned", "in-progress", "completed"].includes(item.status)&&(
-                     <Link href={`/Dashboard/Project-list/${item._id}`}>
-                     <button className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">
-                    View Details
-                       </button>
-                     </Link>
-                )
-             }
+      {/* PROJECT */}
+      <td className="px-6 py-4 font-medium text-gray-800">
+        {item?.ProjectTitle}
+      </td>
 
-              {item.status === "submitted" && (
-                  <>
-                    <button className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
-                      Accept
-                    </button>
-                    <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                      Reject
-                    </button>
-                  </>
-                )}
+      {/* DEADLINE */}
+      <td className="px-6 py-4 text-gray-600">
+        {item?.ProjectDeadline}
+      </td>
 
-        </td>
-       
-      </tr>
-    );
+      {/* BUDGET */}
+      <td className="px-6 py-4 font-semibold text-green-600">
+        ৳ {item?.ProjectBudget}
+      </td>
+
+      {/* STATUS */}
+      <td className="px-6 py-4">
+        <span className={`px-2 py-1 text-xs rounded ${statusStyle[item?.status]}`}>
+          {item?.status}
+        </span>
+      </td>
+
+      {/* ACTION */}
+      <td className="px-6 py-4 text-center space-x-2">
+
+        {item?.status === 'unAssigned' && (
+          <>
+            <button
+              className="bg-green-500 text-white px-4 py-2 rounded text-xs hover:bg-green-600"
+              onClick={() => setModalOpen(true)}
+            >
+              Assign
+            </button>
+
+            <AssignSolverModal
+              isOpen={modalOpen}
+              onClose={() => setModalOpen(false)}
+              requests={item.requests}
+              id={item._id}
+              onAssign={handleAssign}
+            />
+          </>
+        )}
+
+        {["assigned", "in-progress", "completed", 'pending'].includes(item.status) && (
+          <Link href={`/Dashboard/Project-list/${item._id}/task-Submition`}>
+            <button className="bg-gray-800 text-white px-4 py-2 rounded text-xs hover:bg-black">
+              View
+            </button>
+          </Link>
+        )}
+
+        {item.status === "submitted" && (
+          <>
+            <button className="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600">
+              Accept
+            </button>
+            <button className="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600">
+              Reject
+            </button>
+          </>
+        )}
+
+      </td>
+
+    </tr>
+  );
 };
 
 export default ListCard;

@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import SolverInfo from '../SolverInfo/SolverInfo';
+import SubmittedTaskView from '../Task-Submition/SubmittedTaskView';
 
 
 const ProjectDetailPage = ({ id }) => {
@@ -17,9 +18,10 @@ const ProjectDetailPage = ({ id }) => {
         const data = await res.json();
         console.log('data is',data.result)
         setProject(data.result);
-        console.log(data.result)
+        console.log('data task', data.result)
         console.log('solverid',project.assignedSolverId)
 
+        // const taskres=await fetch(`api/`)
       
        
     } catch (err) {
@@ -34,7 +36,7 @@ const ProjectDetailPage = ({ id }) => {
 
   // if (loading) return <p className="text-center mt-10">Loading...</p>;
  
-
+console.log('tasks',project?.tasks?.[0])
  
 
   return (
@@ -53,7 +55,8 @@ const ProjectDetailPage = ({ id }) => {
 
       {/* ---------------- Assigned Solver Info ---------------- */}
      <SolverInfo  solverId ={ project.assignedSolverId}></SolverInfo>
-
+   
+         <SubmittedTaskView task={project?.tasks?.[0]} ></SubmittedTaskView>
     
     </div>
   );

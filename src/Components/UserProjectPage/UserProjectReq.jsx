@@ -13,7 +13,7 @@ const UserProjectReq = () => {
       });
       const result = await res.json();
       console.log('results',result)
-      setProject(result?.result || []);
+      setProject(result?.result);
     };
     handleRequest();
   }, []);

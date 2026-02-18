@@ -6,7 +6,7 @@ export const POST=async(req)=>{
      const  projectInfo={
         ...projectIn,
        assignedSolverId: null, 
-       status: "unassigned", 
+       status: "unAssigned", 
         requests: [],                    // solver requests list
          tasks: [],   
           createdAt:new Date(),

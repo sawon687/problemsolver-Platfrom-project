@@ -16,7 +16,7 @@ export const GET = async (req,{params}) => {
            }
 
     const result = await projectColl.findOne({_id:new ObjectId(id)});
-    
+     
     return new Response(
       JSON.stringify({ result:result, success: true }),
       { status: 200 }
@@ -34,6 +34,7 @@ export const GET = async (req,{params}) => {
 export const POST = async (req, { params }) => {
   try {
     const { id } =await params;
+    console.log('id sawon',id)
     const projectInfo = await req.json();
 
     if (!ObjectId.isValid(id)) {
@@ -45,7 +46,7 @@ export const POST = async (req, { params }) => {
 
     const result = await projectColl.updateOne(
       { _id: new ObjectId(id) },
-      { status:'pending',
+      {  
         $push: { tasks: projectInfo} }
     );
 

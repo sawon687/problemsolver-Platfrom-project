@@ -4,7 +4,7 @@ const projectColl=connect('projectColl')
 export const GET = async (req,{params}) => {
   try {
   
-     const {id}=await params
+     const {id}=await params;
      
        if (!id){
             return new Response(JSON.stringify({message:'not fonded '}))
@@ -26,43 +26,72 @@ export const GET = async (req,{params}) => {
   }
 };
 
-//  assigned project update status and assigned id
-export const  POST = async (req,{params}) => {
+export const POST = async (req, { params }) => {
   try {
-  
-     const {id}=await params
-     const assignInfo=await req.json()
-       if (!id){
-            return new Response(JSON.stringify({message:'not fonded '}))
-          }
-    const query = {_id:new ObjectId(id)}
-    const update = {
-      $set: {
-        assignedSolverId: assignInfo.solverId,
-        status:assignInfo.projectStatus,
-        "requests.$[req].status":assignInfo.reqstatus,
-      
-        
-      },
-    
-    };
+    const { id } = await params;
+    const body = await req.json();
+    console.log('body',body)
+    if (!id) {
+      return new Response(JSON.stringify({ message: 'not found' }), { status: 400 });
+    }
+   
+    let update = {};
+    let options = {}; // Array filters eikhane thakbe
 
-    const options={
-        
-        arrayFilters:[
-          
-            {'req.solverId':assignInfo.solverId}
-          
-        ]
-      
+    if (body.action === 'assigned') {
+      update = {
+        $set: {
+          assignedSolverId: body.solverId,
+          status: body.action,
+          "requests.$[req].status": body.reqstatus,
+        }
+      };
+      options = {
+        arrayFilters: [{ 'req.solverId': body.solverId }]
+      };
     }
 
-    const result = await projectColl.updateOne(query,update,options)
-    
- return new Response(
+    if (body.action === 'Accept') {
+      update = {
+        $set: {
+          status: 'Completed',
+          'requests.$[req].status': 'Accept',
+          'tasks.$[task].status': 'Accept',
+        }
+      };
+      options = {
+        arrayFilters: [
+          { 'req.solverId': body.solverId },
+          { 'task.solverId': body.solverId }
+        ]
+      };
+    }
+
+    if (body.action === 'Reject') {
+      update = {
+        $set: {
+          status: 'assigned',
+          'requests.$[req].status': 'Reject',
+          'tasks.$[task].status': 'Reject',
+        }
+      };
+      options = {
+        arrayFilters: [
+          { 'req.solverId': body.solverId },
+          { 'task.solverId': body.solverId }
+        ]
+      };
+    }
+
+    const query = { _id: new ObjectId(id) };
+
+    // Result e update r options dutoi pass korte hobe
+    const result = await projectColl.updateOne(query, update, options);
+
+    return new Response(
       JSON.stringify({
         success: true,
-        message: "Assigned successfully",
+        message: "Action processed successfully",
         data: result,
       }),
       { status: 200 }
@@ -70,7 +99,7 @@ export const  POST = async (req,{params}) => {
   } catch (error) {
     console.error(error);
     return new Response(
-      JSON.stringify({ success: false, message: "Project not found" }),
+      JSON.stringify({ success: false, message: "Internal Server Error" }),
       { status: 500 }
     );
   }

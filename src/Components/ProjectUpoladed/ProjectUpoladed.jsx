@@ -1,5 +1,6 @@
 'use client'
 import JSZip from 'jszip';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -11,6 +12,10 @@ const ProjectUpoladed = ({ id }) => {
   const [progress, setProgress] = useState(0);
   const [loading,setLoading]=useState(false)
 
+  const {data:session}=useSession()
+  console.log('sesstion',session)
+  const solverId=session?._id;
+    console.log('id',id)
   const { register, handleSubmit,reset, setError, clearErrors, formState: { errors } } = useForm();
 
   const handleZipChange = async (e) => {
@@ -96,6 +101,7 @@ const ProjectUpoladed = ({ id }) => {
   // Submit
   const handleProjectUploaded = async(data) => {
     try {
+      console.log('id sawon',id)
       if (!zipReady || !zipFile) return;
       setLoading(true);
 
@@ -110,6 +116,8 @@ const ProjectUpoladed = ({ id }) => {
 
       const submitData = {
         projectId: id,
+        solverId,
+        status:"submited",
         gitRepositoryLink: data.gitRepositoryLink || '',
         liveProjectUrl: data.LiveProUrl || '',
         notes: data.notes || '',
@@ -122,6 +130,7 @@ const ProjectUpoladed = ({ id }) => {
         },
       
       };
+      console.log('submited data',submitData)
 
       const res = await fetch(`/api/user-project/${id}`,{
         method:'POST',
@@ -129,7 +138,7 @@ const ProjectUpoladed = ({ id }) => {
         body:JSON.stringify(submitData)
       });
       const result = await res.json();
-
+   
       console.log('rsulst', result);
       if (result.success) {
         reset()
