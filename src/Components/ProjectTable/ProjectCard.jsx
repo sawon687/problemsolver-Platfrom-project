@@ -1,5 +1,7 @@
-
-import React from 'react';
+'use client'
+import React, { useState } from 'react';
+import { IoEyeOutline } from 'react-icons/io5';
+import RequstesModal from './RequstesModal';
 
 const statusStyle = {
   "unAssigned": "bg-blue-100 text-blue-700",
@@ -8,11 +10,12 @@ const statusStyle = {
   "reject": "bg-red-100 text-red-700"
 };
 const ProjectCard = ({project,index}) => {
+     const [isOpen,setOpen]=useState(false)
 
    
     return (
         <>
-             <tr className="hover:bg-gray-50">
+             <tr className="hover:bg-gray-50 border border-green-500">
                                    
                                 <td className=" font-semibold px-4">
                                    <p className='bg-green-100 text-center px-2 py-2 rounded-xl text-green-700'>{index+1}</p>
@@ -40,7 +43,8 @@ const ProjectCard = ({project,index}) => {
                                 </td>
 
                                 <td className="px-6 py-4">
-                                     <button className='px-2 py-2 bg-primary text-white'>view</button>
+                                     <button onClick={()=> setOpen(true)} className='px-3 rounded-md py-1 bg-primary text-white flex items-center gap-1'> <IoEyeOutline /><span>view</span></button>
+                                     <RequstesModal reqData={project?.requests} isOpen={isOpen} setOpen={setOpen}></RequstesModal>
                                 </td>
 
                                 <td className="px-6 py-4">

@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import AssignSolverModal from '../AssignSolverModal/AssignSolverModal';
 import Link from 'next/link';
+import { IoEyeOutline } from 'react-icons/io5';
+import { MdAssignmentInd } from 'react-icons/md';
 
 const ListCard = ({ item, index }) => {
 
@@ -52,15 +54,15 @@ const ListCard = ({ item, index }) => {
       </td>
 
       {/* ACTION */}
-      <td className="px-6 py-4 text-center space-x-2">
+      <td className="px-6  py-4 text-center space-x-2">
 
         {item?.status === 'unAssigned' && (
           <>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded text-xs hover:bg-green-600"
+              className="bg-green-500 text-white px-2 py-2 rounded text-xs hover:bg-green-600 flex items-center gap-1"
               onClick={() => setModalOpen(true)}
-            >
-              Assign
+            > <MdAssignmentInd/>
+            <span>  Assign</span>
             </button>
 
             <AssignSolverModal
@@ -75,22 +77,13 @@ const ListCard = ({ item, index }) => {
 
         {["assigned", "in-progress", "completed", 'pending'].includes(item.status) && (
           <Link href={`/Dashboard/Project-list/${item._id}/task-Submition`}>
-            <button className="bg-gray-800 text-white px-4 py-2 rounded text-xs hover:bg-black">
-              View
+            <button className="bg-gray-800 text-white px-3 py-2 rounded text-xs hover:bg-black flex items-center gap-1 "><IoEyeOutline />
+              <span>View</span>
             </button>
           </Link>
         )}
 
-        {item.status === "submitted" && (
-          <>
-            <button className="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600">
-              Accept
-            </button>
-            <button className="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600">
-              Reject
-            </button>
-          </>
-        )}
+       
 
       </td>
 

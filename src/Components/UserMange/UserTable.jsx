@@ -27,7 +27,7 @@ const UserTable = ({user={}}) => {
     }
     return (
         <>
-          <tr className="hover:bg-green-50 transition">
+          <tr className="hover:bg-green-50 transition border-green-500 border">
 
               {/* User */}
               <td className="p-4 flex items-center gap-3">

@@ -6,11 +6,14 @@ import Link from 'next/link';
 import { IoMenu } from 'react-icons/io5';
 import ProfileDropdown from '../ProfileDropdown/ProfileDropdown';
 import { usePathname } from 'next/navigation';
+import { FaSearchPlus } from 'react-icons/fa';
+import SearchModal from '../searchModal/SearchModal';
 
 const Navbar = () => {
   const { data, status } = useSession();
   const [toggle, setToggle] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isOpen,setIsOpen]=useState(false)
   
   const pathname=usePathname()
 
@@ -21,13 +24,15 @@ const Navbar = () => {
   const links = (
     <>
       <Navlink to="/" name="Home" />
-      <Navlink to="/Projectes" name="Project" />
+      <Navlink to="/Project" name="Project" />
       <Navlink to="/About" name="About" />
       <Navlink to="/Contact" name="Contact" />
+      <button className='mx-2' onClick={()=> setIsOpen(true)}><FaSearchPlus size={22} /></button>
     </>
   );
 
   return (
+    <>
     <div className="fixed top-0 left-0 w-full z-50 h-16 lg:h-20 flex bg-base-100 shadow-md">
       <div className="flex w-[550px] items-center px-4 lg:px-6 ">
         <a className="text-lg lg:text-3xl font-bold">
@@ -78,6 +83,12 @@ const Navbar = () => {
     
       <ProfileDropdown toggle={toggle} setToggle={setToggle} />
     </div>
+
+       
+          <SearchModal isOpen={isOpen} setIsOpen={setIsOpen}></SearchModal>
+      
+
+       </>
   );
 };
 

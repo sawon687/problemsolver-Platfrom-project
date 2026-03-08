@@ -1,6 +1,7 @@
 import connect from "@/lib/dbconnect";
 
-const projectColl=connect('projectColl')
+const projectColl = connect('projectColl');
+
 export const GET = async (req) => {
   try {
   

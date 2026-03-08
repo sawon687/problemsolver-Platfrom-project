@@ -27,11 +27,11 @@ const ByuerProjectList = () => {
   }, [sesstion]);
 
   return (
-    <div className="bg-white rounded-xl   shadow w-7xl mx-auto border border-green-300 overflow-hidden">
+    <div className="bg-white rounded-xl   shadow max-w-7xl w-full mx-auto border border-green-300 overflow-hidden">
           <div className='flex items-center py-4 bg-gradient-to-r  from-green-500 to-emerald-600'>
             <h1 className='text-2xl text-gray-50 font-bold pl-5'>Manage Buyer Project</h1>
           </div>
-      <table className="w-full text-sm">
+      <table className="min-w-full text-sm">
 
         {/* HEADER */}
         <thead className="  bg-green-200  text-green-700">

@@ -8,7 +8,7 @@ export const GET=async(req)=>{
    try {
     const session=await getServerSession(authOptions)
    
-
+      console.log('session',session)
           if(!session)
           {
              return new Response(JSON.stringify({
@@ -21,7 +21,9 @@ export const GET=async(req)=>{
           }
         
        const solverId=session._id
+       console.log('id',solverId)
        const project=await projectColl.find({"requests.solverId":solverId}).toArray() 
+       console.log('project',project)
        const projects=project.map(project=> ({
          ...project,
          requests:project.requests.filter(req=> req.solverId===solverId)

@@ -81,7 +81,7 @@ const ProjectCreate = () => {
     <option value="">Select project category</option>
     <option value="web-development">Web Development</option>
     <option value="app-development">App Development</option>
-    <option value="ui-ux-design">UI / UX Design</option>
+    <option value="ui/ux design">UI / UX Design</option>
     <option value="backend-development">Backend Development</option>
     <option value="frontend-development">Frontend Development</option>
     <option value="fullstack-development">Full Stack Development</option>

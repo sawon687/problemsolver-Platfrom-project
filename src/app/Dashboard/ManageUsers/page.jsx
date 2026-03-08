@@ -1,4 +1,5 @@
-import UserTable from "@/Components/UserTable/UserTable";
+
+import UserTable from "@/Components/UserMange/UserTable";
 import React from "react";
 
 const getuser = async () => {
@@ -12,10 +13,10 @@ const getuser = async () => {
 
 const page = async () => {
   const user = await getuser();
-
+     
   return (
     <div className="p-3 sm:p-6 bg-green-50 min-h-screen">
-      <div className=" mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
+      <div className=" mx-auto bg-white shadow-2xl border-3 border-green-500 rounded-2xl overflow-hidden">
 
         {/* Header */}
         <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 sm:px-6 sm:py-4 text-lg sm:text-xl font-bold">
@@ -25,7 +26,7 @@ const page = async () => {
         {/* Table Wrapper */}
         <div className="overflow-x-auto">
 
-          <table className="min-w-full text-left border-collapse">
+          <table className="min-w-full text-left border-collapse ">
 
             {/* Table Head */}
             <thead className="sticky top-0 z-10">
@@ -45,7 +46,8 @@ const page = async () => {
             {/* Table Body */}
             <tbody className="text-sm sm:text-base">
               {user?.map((user) => (
-                <UserTable key={user._id} user={user} />
+                <UserTable
+                 key={user._id} user={user} />
               ))}
             </tbody>
 

@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 const ProjectCard = ({ project }) => {
-  console.log('project id',project._id)
+
   return (
     <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col justify-between hover:shadow-2xl transition-shadow duration-300">
       {/* Project Header */}
@@ -20,11 +20,11 @@ const ProjectCard = ({ project }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="mt-4 flex gap-3">
-        <button className="flex-1 bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors">
+      <div className="mt-4 flex gap-2">
+        <button className="flex-1 bg-primary text-white  px-2 rounded-md hover:bg-blue-600 transition-colors">
           Request to Work
         </button>
-        <Link href={`/Projectes/${project?._id}`} className="flex-1 btn text-center border border-primary hover:bg-primary  hover:text-white text-gray-700 py-2 px-4 rounded-lg  transition-colors">
+        <Link href={`/Project/${project?._id}`} className="flex-1 btn text-center border border-primary hover:bg-primary  hover:text-white text-gray-700 py-2 px-4 rounded-lg  transition-colors">
           Details
         </Link>
       </div>

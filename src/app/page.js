@@ -1,11 +1,17 @@
+'use client'
 import Banner from "@/Components/Banner/Banner";
-import Image from "next/image";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="min-h-screen bg-white text-gray-800 overflow-hidden">
+
+      <Banner />
+
     
-     <Banner></Banner>
     </div>
   );
 }

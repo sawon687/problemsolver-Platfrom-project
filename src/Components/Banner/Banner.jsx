@@ -1,6 +1,8 @@
 'use client'
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
+import BuyerApplyFrom from "../BuyerApplyFrom/BuyerApplyFrom";
 
 const banners = [
   {
@@ -27,6 +29,9 @@ const Banner = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false); // mouse hover pause
   const intervalRef = useRef();
+  const [open,setOpen]=useState(false)
+  const {data}=useSession()
+  console.log('session',data)
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
@@ -39,7 +44,8 @@ const Banner = () => {
   }, [isPaused]);
 
   return (
-  <div className="px-4 w-full px-15 mx-auto h-[400px] md:h-[520px] grid grid-cols-1 md:grid-cols-2 gap-5">
+    <>
+  <div className="px-4 w-full px-25 mx-auto h-[400px] md:h-[520px] grid grid-cols-1 md:grid-cols-2 gap-5">
 
     {/* LEFT SIDE - SLIDER */}
     <div
@@ -123,9 +129,28 @@ const Banner = () => {
           </p>
         </div>
 
-        <button className="mt-4 bg-white text-green-600 font-semibold px-5 py-2 rounded-lg w-fit hover:scale-105 transition">
-          Post Project
-        </button>
+        {!data ? (
+  <button
+    onClick={() => (window.location.href = "/login")}
+    className="mt-4 bg-white text-green-600 font-semibold px-5 py-2 rounded-lg w-fit hover:scale-105 transition"
+  >
+    Login to Post Project
+  </button>
+) : data.role !== "buyer" ? (
+  <button
+    onClick={() => (window.location.href = "/Dashboard/Profile")}
+    className="mt-4 bg-white text-green-600 font-semibold px-5 py-2 rounded-lg w-fit hover:scale-105 transition"
+  >
+    Become a Buyer
+  </button>
+) : (
+  <button
+    onClick={() => (window.location.href = "/Dashboard/CreateProject")}
+    className="mt-4 bg-white text-green-600 font-semibold px-5 py-2 rounded-lg w-fit hover:scale-105 transition"
+  >
+    Post Project
+  </button>
+)}
       </div>
 
       {/* BECOME SOLVER */}
@@ -146,6 +171,9 @@ const Banner = () => {
 
     </div>
   </div>
+
+  <BuyerApplyFrom></BuyerApplyFrom>
+  </>
 );
 
 };

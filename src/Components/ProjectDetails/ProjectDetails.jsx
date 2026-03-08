@@ -50,7 +50,7 @@ const ProjectDetails = ({ project = {} }) => {
       {/* Action */}
       <Link href={`/Projectes/${project?._id}/Request`}>
       <button 
-        disabled={project?.status !== "unassigned"}
+        disabled={project?.status!== "assigned"}
         className={`w-full py-3 rounded-md font-semibold transition
         ${
           project?.status === "unassigned"

@@ -1,0 +1,6 @@
+/* BuyerApplyForm.css
+.buyerForm {
+  clip-path: polygon(100% 100%, 0 100%, 0 0, 85% 0);
+  background-color: #22c55e; /* Tailwind green-500 */
+  /* Optional gradient */
+  /* background: linear-gradient(to right, #34d399, #10b981); */ 
