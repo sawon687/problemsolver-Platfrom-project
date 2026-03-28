@@ -10,7 +10,6 @@ export async function POST(req) {
     console.log('results',userInfo)
     const hashedPassword = await bcrypt.hash(userInfo.password, 10);
     userInfo.password=hashedPassword
-    userInfo.role='problem_solver'
     userInfo.date=new Date()
        
     const result=await userColl.insertOne(userInfo)

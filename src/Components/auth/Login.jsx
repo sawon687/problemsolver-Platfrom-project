@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
+import GoogleSIngupButton from '../GoogleSingupButton/GoogleSIngupButton';
 
 const Login = () => {
     const {
@@ -94,7 +95,7 @@ const handleLogin = async (data) => {
             Register
           </Link>
         </p>
-
+<GoogleSIngupButton>  </GoogleSIngupButton>
       </div>
     </div>
   );

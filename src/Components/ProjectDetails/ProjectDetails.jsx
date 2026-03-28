@@ -48,12 +48,12 @@ const ProjectDetails = ({ project = {} }) => {
       </div>
 
       {/* Action */}
-      <Link href={`/Projectes/${project?._id}/Request`}>
+      <Link href={`/Project/${project?._id}/Request`}>
       <button 
-        disabled={project?.status!== "assigned"}
+        disabled={project?.status!== "unAssigned"}
         className={`w-full py-3 rounded-md font-semibold transition
         ${
-          project?.status === "unassigned"
+          project?.status === "unAssigned"
             ? "bg-primary text-white hover:bg-primary/90"
             : "bg-gray-300 cursor-not-allowed"
         }`}

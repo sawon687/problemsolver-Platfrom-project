@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
   import bcrypt from 'bcryptjs';
 import connect from "@/lib/dbconnect";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -13,9 +14,10 @@ export const authOptions = {
         email: {},
         password: {},
       },
-    async authorize(credentials) {
-  try {
-    const userColl =   connect('userColl');
+ 
+      
+    async authorize(credentials) { try {
+  const userColl=await connect('userColl')
     const user = await userColl.findOne({ userEmail: credentials.email });
      console.log('user',user)
     if (!user) return null;
@@ -35,40 +37,102 @@ export const authOptions = {
 }
 
     }),
+
+        GoogleProvider({
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET
+  }),
+  
     
   ],
 
 
   callbacks: {
   async signIn({ user, account, profile, email, credentials }) {
+  try {
+ 
+           if(!user.email)return false
+      
+            const newUSer={
+                username:user.name,
+                userEmail:user.email,
+                userPhoto:user.image,
+                provider:account.provider,
+                providerId:account.providerAccountId,
+                role:null,
+                date:new Date().toISOString()
+              }
+            const userColl=await connect('userColl')
+           const existingUser=await userColl.findOne({userEmail:user.email,providerId:account.providerAccountId})
+           if(!existingUser)
+           {
+             
+
+           await userColl.insertOne(newUSer)
+           }
+
+     
     return true
+  } catch (error) {
+    console.log('auth error',error) 
+    return false
+  }
   },
-  async redirect({ url, baseUrl }) {
-    return baseUrl
-  },
+async redirect({ url, baseUrl }) {
+  // যদি url relative হয় → baseUrl যোগ কর
+  if (url.startsWith("/"))
+    { 
+     
+      console.log(` sawon ${baseUrl}${url}`)
+       return `${baseUrl}${url}`; }
+
+  // যদি absolute url হয় → 그대로 ফেরত দাও
+  else if (new URL(url).origin === baseUrl) return url;
+
+  // অন্য সব ক্ষেত্রে → baseUrl
+  return baseUrl;
+},
+async jwt({ token, user, account }) {
+  if (account?.provider === 'google') {
+    // DB থেকে user read
+    const userColl = await connect('userColl');
+    const dbUser = await userColl.findOne({ userEmail: token.email || user?.email });
+
+    if (dbUser) {
+      token._id = dbUser._id.toString();
+      token.username = dbUser.username;
+      token.email = dbUser.userEmail;
+      token.userPhoto = dbUser.userPhoto;
+      token.role = dbUser?.role;
+    }
+  }
+
+  // Credentials case
+  if (user && account?.provider === 'credentials') {
+    token._id = user._id.toString();
+    token.username = user.username;
+    token.email = user.userEmail;
+    token.userPhoto = user.userPhoto;
+    token.role = user?.role;
+  }
+
+  return token;
+},
   async session({ session, token}) {
         if(token)
         {
               session._id= token._id;
               session.username=token.username,
               session.email=token.email;
-            session.userPhoto= token.userPhoto;
-            session.role= token.role;
+              session.userPhoto= token.userPhoto;
+              session.role= token.role;
         
         }
         
+        
     return session;
   },
-  async jwt({ token, user }) {
-     if (user) {
-      token._id=user._id.toString()
-     token.username = user.username || null;
-    token.email = user.userEmail;
-    token.userPhoto = user.userPhoto;
-    token.role=user.role
-  }
-    return token
-  },
+ 
 },
   pages:{
     signIn:'/Login',

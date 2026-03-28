@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 const ByuerProjectList = () => {
   const { data: sesstion } = useSession();
   const [project, setProject] = useState([]);
-
+console.log('project',project)
   useEffect(() => {
     const getProjectlist = async () => {
       const id = sesstion?._id;

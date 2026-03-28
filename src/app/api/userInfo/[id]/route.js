@@ -15,7 +15,10 @@ export const GET = async (req,{params}) => {
     
     return new Response(
       JSON.stringify({ data: result, success: true }),
-      { status: 200 }
+      { status: 200 ,    headers: {
+      "Content-Type": "application/json",
+    },}
+    
     );
   } catch (error) {
     console.error(error);

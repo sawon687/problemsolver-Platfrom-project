@@ -24,9 +24,7 @@ export default function RootLayout({ children }) {
       <NextAuthProvider>
     <html lang="en" >
    
-       <body
-       
-    suppressHydrationWarning
+       <body suppressHydrationWarning
     className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-br from-green-50 to-white`}
   >
         

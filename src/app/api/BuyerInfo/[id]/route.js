@@ -1,20 +1,22 @@
 import connect from "@/lib/dbconnect"
 import { ObjectId } from "mongodb"
 const BuyerInfo=connect('BuyerInfo')
-export const POST=async(req)=>{
+export const POST=async(req,{params})=>{
     try { 
       
+         const {id}=await params
+         console.log('id buyer',id)
          const buyerData=await req.json()
          console.log('data byuer',buyerData)
          
-            if(!buyerData.BuyerId)
+            if(!id && !buyerData)
             {
-                 return new Response({success:false,message:'unauthrize your id'})
+                 return new Response.json({success:false,message:'unauthrize your id'})
             }
         
 
              const query={
-                 _id: new ObjectId(buyerData.BuyerId)
+                 _id: new ObjectId(id)
               }
           
 
@@ -25,18 +27,25 @@ export const POST=async(req)=>{
      
      const result=await BuyerInfo.updateOne(query,update)
 
-     return new Response(JSON.stringify({
-        success:true,
-        message:'Byuer application  successfully',
-        modifiedCount:result.modifiedCount
-    }))
+   return Response.json({
+      success: true,
+      result: result,
+      message: 'Buyer application successfully',
+      modifiedCount: result.modifiedCount
+    })
      
     } catch (error) {
         console.log('Byuer application not inserted',error)
-         return Response.json({
-        success:false,
-        message:'Byuer application not created something wrong',
-      
-     })
+    return new Response(
+  JSON.stringify({
+    success:false,
+    message:'unauthrize your id'
+  }),
+  {
+    headers:{
+      "Content-Type":"application/json"
+    }
+  }
+)
     }
 }

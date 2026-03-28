@@ -57,6 +57,7 @@ export const POST = async (req, { params }) => {
           status: 'Completed',
           'requests.$[req].status': 'Accept',
           'tasks.$[task].status': 'Accept',
+          updatedAt:new Date()
         }
       };
       options = {
@@ -73,6 +74,7 @@ export const POST = async (req, { params }) => {
           status: 'assigned',
           'requests.$[req].status': 'Reject',
           'tasks.$[task].status': 'Reject',
+           updatedAt:new Date()
         }
       };
       options = {

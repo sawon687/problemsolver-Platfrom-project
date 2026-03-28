@@ -4,11 +4,12 @@ import AssignSolverModal from '../AssignSolverModal/AssignSolverModal';
 import Link from 'next/link';
 import { IoEyeOutline } from 'react-icons/io5';
 import { MdAssignmentInd } from 'react-icons/md';
+import PaymentModal from '../paymentMethods/PaymentModal';
 
 const ListCard = ({ item, index }) => {
-
+// { isOpen, onClose, onPay }
   const [modalOpen, setModalOpen] = useState(false);
-
+  const [isOpen,setOpen]=useState(false)
   const handleAssign = (solverId) => {
     console.log("Assigned solver:", solverId);
     setModalOpen(false);
@@ -24,6 +25,7 @@ const ListCard = ({ item, index }) => {
   };
 
   return (
+    <>
     <tr className="hover:bg-gray-50 border border-green-300 transition">
 
       {/* INDEX */}
@@ -75,7 +77,7 @@ const ListCard = ({ item, index }) => {
           </>
         )}
 
-        {["assigned", "in-progress", "completed", 'pending'].includes(item.status) && (
+        {["assigned", "in-progress", 'pending'].includes(item.status) && (
           <Link href={`/Dashboard/Project-list/${item._id}/task-Submition`}>
             <button className="bg-gray-800 text-white px-3 py-2 rounded text-xs hover:bg-black flex items-center gap-1 "><IoEyeOutline />
               <span>View</span>
@@ -83,11 +85,21 @@ const ListCard = ({ item, index }) => {
           </Link>
         )}
 
+        {
+           item?.status==="Completed"&&(
+           
+             <button onClick={()=> setOpen(true)} className='btn bg-blue-500 text-white'>Payment</button>
+         
+           )
+        }
+
        
 
       </td>
 
     </tr>
+    <PaymentModal isOpen={isOpen} setOpen={setOpen} item={item}></PaymentModal>
+    </>
   );
 };
 

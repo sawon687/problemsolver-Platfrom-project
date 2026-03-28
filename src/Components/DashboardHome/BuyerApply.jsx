@@ -45,7 +45,7 @@ import React from 'react';
     console.log("response", userRes, BuyerRes);
 
     if (userRes.success && BuyerRes.success) {
-      refetch();
+        refetch();
     }
 
   } catch (error) {
@@ -55,7 +55,7 @@ import React from 'react';
     return (
         <>
                      {/* user byuer  application  */}
-       <div className="w-full lg:w-4xl bg-white  dark:bg-gray-900 rounded-3xl shadow-lg p-6">
+       <div className="w-full h-full lg:w-4xl bg-white  dark:bg-gray-900 rounded-3xl shadow-lg p-6">
   <h3 className="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-200">
     Buyer Applications
   </h3>
@@ -77,7 +77,8 @@ import React from 'react';
       <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
         {data?.map((req) => (
           <tr
-            key={req.id}
+            key={req.buyersdata._id}
+            
             className="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
           >
             <td className="p-3">{req.username}</td>

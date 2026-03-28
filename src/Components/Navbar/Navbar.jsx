@@ -1,4 +1,5 @@
 'use client'
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Navlink from '../NavLink/Navlink';
@@ -17,7 +18,7 @@ const Navbar = () => {
   
   const pathname=usePathname()
 
-  useEffect(() => setMounted(true), [setMounted]);
+  useEffect(() => setMounted(true), []);
 
   if (!mounted || status === 'loading') return null;
   if(pathname.startsWith('/Dashboard'))return <></>
@@ -73,7 +74,7 @@ const Navbar = () => {
                 Login
               </Link>
               <Link href="/Register" className="btn btn-md bg-primary text-white">
-                Register
+                Join Now
               </Link>
             </>
           )}
@@ -92,4 +93,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);

@@ -26,7 +26,7 @@ const page = async () => {
         {/* Table Wrapper */}
         <div className="overflow-x-auto">
 
-          <table className="min-w-full text-left border-collapse ">
+          <table className="  is-drawer-open:w-2xl  text-left  border-collapse ">
 
             {/* Table Head */}
             <thead className="sticky top-0 z-10">

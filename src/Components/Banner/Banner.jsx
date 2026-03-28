@@ -45,7 +45,7 @@ const Banner = () => {
 
   return (
     <>
-  <div className="px-4 w-full px-25 mx-auto h-[400px] md:h-[520px] grid grid-cols-1 md:grid-cols-2 gap-5">
+  <div className=" pt-10 w-full px-25 mx-auto h-[400px] md:h-[520px] grid grid-cols-1 md:grid-cols-2 gap-5">
 
     {/* LEFT SIDE - SLIDER */}
     <div
@@ -171,8 +171,6 @@ const Banner = () => {
 
     </div>
   </div>
-
-  <BuyerApplyFrom></BuyerApplyFrom>
   </>
 );
 

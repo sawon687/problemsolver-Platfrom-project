@@ -2,6 +2,7 @@
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { motion } from "framer-motion";
 const countryCodes = [
   { name: "Bangladesh", code: "+880" },
   { name: "India", code: "+91" },
@@ -17,6 +18,8 @@ const Register = () => {
   } = useForm()
   
       const [selectedCode, setSelectedCode] = useState(' ');
+      const [form,setForm]=useState(false)
+      const [role,setRole]=useState('')
 
 
   const hadleRegister=async(data)=>{
@@ -64,7 +67,8 @@ const Register = () => {
       
   }
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
+    <>
+ <div className="min-h-screen flex items-center justify-center bg-base-200">
       <div className="w-full max-w-2xl bg-base-100 shadow-xl rounded-2xl p-8">
         
         <div className="text-center mb-8">
@@ -192,14 +196,20 @@ const Register = () => {
                
             </div>
          </div>
+      
 
           <button type='submit' className="btn btn-primary w-full mt-6">
             Register
           </button>
+         
         </form>
 
       </div>
-    </div>
+    </div> 
+  
+
+    </>    
+
   );
 };
 
