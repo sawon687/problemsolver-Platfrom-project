@@ -8,7 +8,7 @@ const GoogleSIngupButton = ({role}) => {
   console.log('role selection',role)
   const handleGoogleLogin = () => {
     localStorage.setItem("role", role); // save role temporarily
-    signIn("google", { callbackUrl: "/Dashboard" });
+    signIn("google", role? { callbackUrl: "/Dashboard" }:null);
   };
 
   return (

@@ -11,7 +11,16 @@ export async function POST(req) {
     const hashedPassword = await bcrypt.hash(userInfo.password, 10);
     userInfo.password=hashedPassword
     userInfo.date=new Date()
+    const exitUser=await userColl.findOne({userEmail:userInfo.userEmail})
+    if(exitUser)
+    {
+         return Response.json({
+        success:false,
+        message:'User Already  created',
        
+       
+    })
+    }
     const result=await userColl.insertOne(userInfo)
     
     return Response.json({

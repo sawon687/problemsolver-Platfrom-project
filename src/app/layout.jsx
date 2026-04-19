@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
     <html lang="en" >
    
        <body suppressHydrationWarning
-    className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-br from-green-50 to-white`}
+    className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-br from-indigo-50 to-white`}
   >
         
         <Navbar></Navbar>

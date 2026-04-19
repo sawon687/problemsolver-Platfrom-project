@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
@@ -6,53 +6,40 @@ import { createPortal } from "react-dom";
 
 const SidebarItem = ({ to, icon, label }) => {
   const pathname = usePathname();
-  const isActive = pathname.endsWith(to) || pathname.startsWith(to);
+  const isActive = pathname === to;
   const [hover, setHover] = useState(false);
 
   return (
     <li
-      className="relative group"
+      className="relative list-none"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
       <Link
         href={to}
-        className={`flex items-center is-drawer-close:justify-center gap-3 px-3 py-2 bg-base-100 rounded-md font-medium transition-all duration-300 shadow-lg ${
+        className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${
           isActive
-            ? "scale-105 text-white bg-primary"
-            : "hover:scale-105 hover:text-white hover:bg-primary"
+            ? "bg-indigo-50 text-indigo-600 shadow-sm"
+            : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600"
         }`}
       >
-        {icon}
-        <span className="is-drawer-close:hidden">{label}</span>
+        <span className={`${isActive ? "text-indigo-600" : "text-slate-400"}`}>
+          {icon}
+        </span>
+        <span className="lg:block hidden">{label}</span>
       </Link>
 
-      {/* Tooltip using Portal */}
-      {hover &&
-        createPortal(
-          <span
-            className="
-              fixed
-              left-full
-              top-1/2
-              -translate-y-1/2
-              ml-2
-              px-3 py-1
-              rounded-md
-              bg-gray-900 text-white text-xs
-              whitespace-nowrap
-              shadow-lg
-              z-[9999]
-            "
-            style={{
-              transform: "translateY(-50%)",
-              left: window.innerWidth > 300 ? "calc(64px + 8px)" : "72px",
-            }}
-          >
-            {label}
-          </span>,
-          document.body
-        )}
+      {/* Tooltip for Mobile/Collapsed view */}
+      {hover && (
+        <div className="lg:hidden">
+          {createPortal(
+            <span className="fixed left-20 top-auto px-3 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-bold shadow-xl z-[9999] whitespace-nowrap">
+              {label}
+            </span>,
+            document.body
+          )}
+        </div>
+      )}
     </li>
   );
 };

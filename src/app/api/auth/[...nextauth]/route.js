@@ -51,7 +51,10 @@ export const authOptions = {
   async signIn({ user, account, profile, email, credentials }) {
   try {
  
-           if(!user.email)return false
+           if (!user?.email && !user?.userEmail) {
+  console.log("No email পাওয়া যায়নি");
+  return false;
+}
       
             const newUSer={
                 username:user.name,
@@ -83,7 +86,7 @@ async redirect({ url, baseUrl }) {
   if (url.startsWith("/"))
     { 
      
-      console.log(` sawon ${baseUrl}${url}`)
+   
        return `${baseUrl}${url}`; }
 
   // যদি absolute url হয় → 그대로 ফেরত দাও

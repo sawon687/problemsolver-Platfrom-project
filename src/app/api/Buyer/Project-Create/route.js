@@ -6,15 +6,13 @@ export const POST=async(req)=>{
      const  projectInfo={
         ...projectIn,
        assignedSolverId: null, 
-       status: "unAssigned", 
-        requests: [],                    // solver requests list
-         tasks: [],   
+       status: "unAssigned",  
           createdAt:new Date(),
            updatedAt: new Date()
      }
      const result=await projectColl.insertOne(projectInfo)
 
-     return new Response(json.stringify({
+     return new Response(JSON.stringify({
         success:true,
         message:'project create successfully',
         insertedId:result.insertedId

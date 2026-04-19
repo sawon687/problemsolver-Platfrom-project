@@ -1,8 +1,11 @@
 'use client'
 import JSZip from 'jszip';
+import { CheckCircle, Github, Globe, Loader2, MessageSquare, Upload } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { MdFolderZip } from 'react-icons/md';
+import MessageModal from '../AllModal/MessageModal';
 
 const ProjectUpoladed = ({ id }) => {
   const [zipFile, setZipFile] = useState(null);
@@ -11,6 +14,12 @@ const ProjectUpoladed = ({ id }) => {
   const [zipTree, setZipTree] = useState(null);
   const [progress, setProgress] = useState(0);
   const [loading,setLoading]=useState(false)
+   const [modal, setModal] = useState({ 
+    open: false, 
+    type: 'success', 
+    title: '', 
+    msg: '' 
+  });
 
   const {data:session}=useSession()
   console.log('sesstion',session)
@@ -115,8 +124,9 @@ const ProjectUpoladed = ({ id }) => {
       const fileList = zipTree ? flattenFiles(zipTree) : [];
 
       const submitData = {
-        projectId: id,
+    
         solverId,
+        solverEmail:session?.email,
         status:"submited",
         gitRepositoryLink: data.gitRepositoryLink || '',
         liveProjectUrl: data.LiveProUrl || '',
@@ -140,10 +150,16 @@ const ProjectUpoladed = ({ id }) => {
       const result = await res.json();
    
       console.log('rsulst', result);
-      if (result.success) {
-        reset()
-        alert(result.message)
+      if (result.success|| result.ok) {
+     
+           setModal({ 
+          open: true, 
+          type: 'success', 
+          title: 'Project Request successfully!', 
+          msg: Response.message || 'Your project has been successfully posted.', 
+        });
         setLoading(false);
+           reset()
       }
 
       console.log("✅ FINAL SUBMIT DATA:", submitData);
@@ -155,87 +171,135 @@ const ProjectUpoladed = ({ id }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow p-8 max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6">Submit Your Project</h2>
+ <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200 p-8">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="h-10 w-1 bg-indigo-600 rounded-full"></div>
+        <h2 className="text-2xl font-bold text-slate-800">Submit Your Project</h2>
+      </div>
 
-      <form onSubmit={handleSubmit(handleProjectUploaded)} className="space-y-4">
-        {/* GitHub */}
-        <div>
-          <label className="block text-sm font-medium mb-1">GitHub Repository Link</label>
-          <input type="text" placeholder="https://github.com/username/project"
-            className="w-full border focus:border-0 focus:ring-2  focus:ring-primary outline-none rounded-lg px-4 py-2"
-            {...register("gitRepositoryLink")}
-          />
-        </div>
+      <form onSubmit={handleSubmit(handleProjectUploaded)} className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* GitHub */}
+          <div className="space-y-2">
+            <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+              <Github size={16} /> GitHub Repository
+            </label>
+            <input
+              type="text"
+              placeholder="https://github.com/username/project"
+              className="w-full bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none rounded-2xl px-5 py-3 transition-all"
+              {...register("gitRepositoryLink")}
+            />
+          </div>
 
-        {/* Live URL */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Live Project URL</label>
-          <input type="text" placeholder="https://your-project.vercel.app"
-            className="w-full border focus:border-0 focus:ring-2  focus:ring-primary outline-none rounded-lg px-4 py-2"
-            {...register("LiveProUrl")}
-          />
+          {/* Live URL */}
+          <div className="space-y-2">
+            <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+              <Globe size={16} /> Live Project URL
+            </label>
+            <input
+              type="text"
+              placeholder="https://your-app.vercel.app"
+              className="w-full bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none rounded-2xl px-5 py-3 transition-all"
+              {...register("LiveProUrl")}
+            />
+          </div>
         </div>
 
         {/* Notes */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Additional Notes</label>
-          <textarea rows="4" placeholder="Any instruction or note for the buyer..."
-            className="w-full border focus:border-0 focus:ring-2  focus:ring-primary outline-none rounded-lg px-4 py-2"
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+            <MessageSquare size={16} /> Additional Notes
+          </label>
+          <textarea
+            rows="4"
+            placeholder="Write any specific instructions for the buyer..."
+            className="w-full bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none rounded-2xl px-5 py-4 transition-all"
             {...register("notes")}
           />
         </div>
 
-        {/* ZIP Upload */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Project ZIP File</label>
-          <label className="border-2 border-dashed border-gray-300 rounded-xl p-6 block text-center cursor-pointer">
-            {zipReady ? (
-              <div className="text-green-600 font-semibold">
-                ✅ {zipName}
-              </div>
-            ) : (
-              <>
-                <p className="text-gray-600 mb-2">Upload ZIP Folder</p>
-                <p className="text-xs text-gray-400 mb-3">Only .zip file supported</p>
-                <span className="px-4 py-2 bg-gray-200 rounded-lg text-sm inline-block">Browse ZIP</span>
-              </>
-            )}
-            <input type="file" accept=".zip" className="hidden"
+        {/* ZIP Upload Box */}
+        <div className="space-y-4">
+          <label className="text-sm font-bold text-slate-700 block">Project Source (ZIP)</label>
+          <div className={`relative group border-2 border-dashed rounded-3xl p-10 transition-all ${zipReady ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200 bg-slate-50 hover:bg-white hover:border-indigo-300'}`}>
+            <input
+              type="file"
+              accept=".zip"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               {...register("projectZip", { required: "ZIP file is required", onChange: handleZipChange })}
             />
-          </label>
-          {errors.projectZip && <p className="text-red-500 mt-2">{errors.projectZip.message}</p>}
+            <div className="flex flex-col items-center justify-center text-center">
+              {zipReady ? (
+                <div className="space-y-2">
+                  <div className="bg-emerald-100 p-4 rounded-full inline-block text-emerald-600">
+                    <CheckCircle size={32} />
+                  </div>
+                  <p className="text-emerald-700 font-bold block">{zipName}</p>
+                  <p className="text-emerald-500 text-xs uppercase tracking-widest font-bold">Successfully Scanned</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="bg-white p-4 rounded-2xl shadow-sm inline-block text-indigo-600 group-hover:scale-110 transition-transform">
+                    <Upload size={32} />
+                  </div>
+                  <div>
+                    <p className="text-slate-700 font-bold">Drop your project ZIP folder here</p>
+                    <p className="text-slate-400 text-xs mt-1 italic">Max size: 50MB (Only .zip supported)</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          {errors.projectZip && <p className="text-red-500 text-xs font-bold pl-2">{errors.projectZip.message}</p>}
 
-          {/* Progress bar with percentage */}
+          {/* Progress Bar */}
           {zipFile && !zipReady && (
-            <div className="mt-2 w-full bg-gray-200 h-4 rounded relative">
-              <div
-                className="h-4 bg-green-500 rounded"
+            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-indigo-600 transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
-              <span className="absolute top-0 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white">
-                {progress}%
-              </span>
             </div>
           )}
 
-          {/* Nested ZIP preview */}
+          {/* Folder Tree Preview */}
           {zipReady && zipTree && (
-            <div className="mt-4 border rounded-lg p-3 bg-gray-50 max-h-64 overflow-y-auto">
-              <h3 className="font-semibold mb-2">📦 ZIP Folder Preview</h3>
-              {renderTree(zipTree)}
+            <div className="mt-6 rounded-3xl border border-slate-200 bg-white overflow-hidden">
+              <div className="bg-slate-50 px-6 py-3 border-b border-slate-200 flex items-center gap-2">
+                <MdFolderZip size={16} className="text-slate-500" />
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">File Explorer Preview</span>
+              </div>
+              <div className="p-6 max-h-72 overflow-y-auto custom-scrollbar bg-slate-50/50">
+                {renderTree(zipTree)}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Submit */}
-        <button type="submit"
-          disabled={loading}
-          className="mt-4 bg-primary text-white px-6 py-2 rounded disabled:opacity-50">
-          {loading?'submiting...':'submit project'}
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={loading || !zipReady}
+          className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-10 py-4 rounded-2xl shadow-lg shadow-indigo-200 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="animate-spin" size={20} />
+              Submitting...
+            </>
+          ) : (
+            "Submit Project Now"
+          )}
         </button>
       </form>
+          <MessageModal
+        isOpen={modal.open} 
+        type={modal.type} 
+        title={modal.title} 
+        message={modal.msg} 
+        onClose={() => setModal({ ...modal, open: false })}
+      />
     </div>
   );
 };

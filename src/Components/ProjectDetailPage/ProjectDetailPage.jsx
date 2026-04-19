@@ -1,63 +1,95 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import SolverInfo from '../SolverInfo/SolverInfo';
+import { IoCalendarOutline, IoWalletOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
 import SubmittedTaskView from '../Task-Submition/SubmittedTaskView';
 
-
 const ProjectDetailPage = ({ id }) => {
-  const [project, setProject] = useState({});
-  const [loading, setLoading] = useState(false);
- console.log('DIS SAON',project)
-  useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        // setLoading(true);
+  
+  const { data: project, isLoading, error } = useQuery({
+    queryKey: ['project', id],
+    queryFn: async () => {
+      const res = await fetch(`/api/user-project/${id}`);
+      const data = await res.json();
+      return data.data;
+    },
+    enabled: !!id,
+  });
+console.log('project solver',project)
+  if (isLoading) return (
+    <div className="flex justify-center items-center min-h-[400px]">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+    </div>
+  );
 
-        // Fetch project data
-        const res = await fetch(`/api/user-project/${id}`);
-        const data = await res.json();
-        console.log('data is',data.result)
-        setProject(data.result);
-        console.log('data task', data.result)
-        console.log('solverid',project.assignedSolverId)
-
-        // const taskres=await fetch(`api/`)
-      
-       
-    } catch (err) {
-
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjectData();
-  }, [id]);
-
-  // if (loading) return <p className="text-center mt-10">Loading...</p>;
- 
-console.log('tasks',project?.tasks?.[0])
- 
+  if (error) return <div className="text-center text-red-500 py-10">Error loading project.</div>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8">
-      {/* ---------------- Project Info ----------------*/}
-      <div className="bg-white shadow-md rounded p-6">
-        <h1 className="text-2xl font-bold">{project?.ProjectTitle}</h1>
-        <p className="text-gray-600 mt-2">{project.ProjectBudget}</p>
-        <p className="text-gray-600 mt-2">{project.assignedSolverId}</p>
-        <div className="flex justify-between mt-4 text-sm text-gray-500">
-          <span>Deadline: {project.ProjectDeadline}</span>
-          <span>Budget: ${project.ProjectBudget}</span>
-          <span>Status: <strong>{project.status}</strong></span>
+    <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-500">
+      {/* ---------------- Project Info Header ----------------*/}
+      <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-8 md:p-10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
+           <IoShieldCheckmarkOutline size={120} className="text-indigo-600" />
         </div>
-      </div> 
+        
+        <div className="relative z-10">
+          <span className="px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block">
+            Project Overview
+          </span>
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight mb-6">
+            {project?.ProjectTitle}
+          </h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-50">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                <IoWalletOutline size={24} />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Budget</p>
+                <p className="text-lg font-black text-slate-800">${project?.ProjectBudget}</p>
+              </div>
+            </div>
 
-      {/* ---------------- Assigned Solver Info ---------------- */}
-     <SolverInfo  solverId ={ project.assignedSolverId}></SolverInfo>
-   
-         <SubmittedTaskView task={project?.tasks?.[0]} ></SubmittedTaskView>
-    
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-600">
+                <IoCalendarOutline size={24} />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Deadline</p>
+                <p className="text-lg font-black text-slate-800">{project?.ProjectDeadline}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600">
+                <div className="w-3 h-3 bg-current rounded-full animate-pulse" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</p>
+                <p className="text-lg font-black text-slate-800 capitalize">{project?.status}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+        <div className="lg:col-span-1">
+          <SolverInfo solverId={project?.assignedSolverId
+} />
+        </div>
+
+     
+        <div className="lg:col-span-2">
+       
+            <SubmittedTaskView projectId={project._id } />
+        
+          
+        </div>
+      </div>
     </div>
   );
 };

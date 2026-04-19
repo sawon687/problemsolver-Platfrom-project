@@ -1,5 +1,4 @@
 import connect from "@/lib/dbconnect";
-import { getServerSession } from "next-auth";
 
 const projectColl=connect('projectColl')
 
@@ -8,7 +7,7 @@ export const GET = async (req) => {
     const { searchParams } = new URL(req.url); // query params নেবে
     const category = searchParams.get('category') || 'All';
     const  search=searchParams.get('search')||''
-    console.log('seaarch is sawon',search)
+  
     const query = {};
     if (category && category !== 'All') {
       query.ProjectCategory = category;
@@ -27,6 +26,8 @@ export const GET = async (req) => {
     }
 
     const projects = await projectColl.find(query).toArray();
+
+
 
     return new Response(JSON.stringify({ result: projects, success: true }), { status: 200 });
   } catch (error) {
