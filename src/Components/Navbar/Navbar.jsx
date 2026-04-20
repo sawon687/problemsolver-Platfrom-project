@@ -19,9 +19,9 @@ const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
-
+  const [notifCount,setNotifCount]=useState(false)
   const profileRef = useRef(null);
-
+console.log('data',data)
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
@@ -32,7 +32,7 @@ const Navbar = () => {
     const handleClick = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setProfileOpen(false);
-        setNotifOpen(false);
+        
       }
     };
     document.addEventListener("mousedown", handleClick);
@@ -112,21 +112,10 @@ const Navbar = () => {
                 <div className="flex items-center gap-2">
                   {/* Notification Bell with Badge */}
                   <div className="relative">
-                    <button 
-                      onClick={() => setNotifOpen(!notifOpen)}
-                      className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all relative ${notifOpen ? "bg-indigo-600 text-white shadow-lg" : "text-slate-500 hover:bg-slate-100"}`}
-                    >
-                      <IoNotificationsOutline size={20} />
-                      <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white ring-2 ring-rose-500/20"></span>
-                    </button>
-                    
-                    <AnimatePresence>
-                      {notifOpen && (
                        
-                         <NotificationDropdown></NotificationDropdown>
+                         <NotificationDropdown notifOpen={notifOpen} setNotifCount={setNotifCount} setNotifOpen={setNotifOpen}></NotificationDropdown>
                        
-                      )}
-                    </AnimatePresence>
+                 
                   </div>
 
                   {/* Profile Section */}

@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import React from 'react'
 import AdminDashboard from '../../Components/DashoboardLayout/AdiminDashoboard';
 import BuyerDashboard from '../../Components/DashoboardLayout/BuyerDashboard';
+import SolverDashboard from '../../Components/DashoboardLayout/SolverDashboard';
 
 const DashoBoardHome= () => {
   const{data:session}=useSession()
@@ -29,6 +30,10 @@ const DashoBoardHome= () => {
 {role==='Buyer' && (
           <BuyerDashboard apiData={apiData}></BuyerDashboard>
          )
+       }
+
+       {
+         role==='Worker' &&( <SolverDashboard></SolverDashboard>)
        }
 
     </div>

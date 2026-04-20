@@ -1,140 +1,244 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { IoNotificationsOutline, IoTrashOutline, IoChevronForward, IoTimeOutline, IoCheckmarkDoneCircleOutline } from 'react-icons/io5';
-import Link from 'next/link';
+import { 
+  IoNotificationsOutline, IoTrashOutline, IoChevronForward, 
+  IoTimeOutline, IoCheckmarkDoneCircleOutline, IoSparklesOutline, IoFilterOutline
+} from 'react-icons/io5';
 import { format } from 'timeago.js';
+import ConfrimMessageModal from '../../Components/AllModal/ConfrimMessageModal';
+import MessageModal from '../../Components/AllModal/MessageModal';
+import { useRouter } from 'next/navigation';
 
-const page = () => {
+
+
+const NotificationPage = () => {
   const { data: session } = useSession();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+   const [modal, setModal] = useState({ 
+      open: false, 
+      type: 'success', 
+      title: '', 
+      msg: '' 
+    });
+  // Modal states
+  const [conFrModalOpen, setConFramModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null); // ID track korar jonno
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router=useRouter()
+  const fetchAll = async () => {
+    if (session?.user?.email) {
+      try {
+        const res = await fetch(`/api/notifications?email=${session.user.email}`);
+        const data = await res.json();
+        setNotifications(data.data || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   useEffect(() => {
-    const fetchAll = async () => {
-      if (session?.user?.email) {
-        try {
-          const res = await fetch(`/api/notifications?email=${session.user.email}`);
-          const data = await res.json();
-          setNotifications(data.data || []);
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
     fetchAll();
   }, [session]);
 
+  const handleMarkAllRead = async () => {
+    try {
+      const res = await fetch(`/api/notifications/mark-read`, {
+        method: 'PUT',
+        body: JSON.stringify({ email: session?.user?.email }),
+      });
+      if (res.ok) {
+     
+        toast.success('All marked as read');
+      }
+    } catch (err) {
+      toast.error('Failed to update');
+    }
+  };
+
+  // --- Dynamic Delete Function (Single & All) ---
+  const handleDelete = async (id = null) => {
+    const email = session?.user?.email;
+    if (!email) return;
+
+    setIsDeleting(true);
+    try {
+  
+      let uri = `/api/notifications?email=${email}${id ? `&id=${id}` : ''}`;
+      
+      const res = await fetch(uri, { method: 'DELETE' });
+      const result=await res.json()
+      if (res.ok) {
+                  setModal({ 
+          open: true, 
+          type: 'success', 
+          title: 'Notifiacation Delete', 
+          msg:result.message, 
+        });
+
+        if (id) {
+             
+        } else {
+          setNotifications([]);
+        }
+        setConFramModal(false);
+      }
+    } catch (err) {
+    
+              setModal({ 
+          open: true, 
+          type: 'Error', 
+          title: 'Notifiacation Delete', 
+          msg:err.message, 
+        });
+
+    } finally {
+      setIsDeleting(false);
+      setSelectedId(null);
+    }
+  };
+
+  const openDeleteModal = (id = null) => {
+    setSelectedId(id); 
+    setConFramModal(true);
+  };
+
+  const unreadCount = notifications.filter(n => n.status === 'unread').length;
+
+  //  status cahnge and rotuer page 
+const handleNotificationClick = async (notif) => {
+  
+
+    try {
+      await fetch(`/api/notifications/${notif._id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: 'read' })
+      });
+    } catch (err) {
+      console.error("Status update failed", err);
+    }
+
+    let targetPath = "";
+
+    switch (notif.type) {
+      case 'submission':
+        targetPath = `/Dashboard/Project-list/${notif.projectId}/task-Submition`;
+        break;
+      case 'assigned':
+        targetPath = `/Dashboard/My-Requsts/${notif.projectId}/UploadedProject`;
+        break;
+      case 'accept':
+      case 'reject':
+        targetPath = "/Dashboard/My-Requsts";
+        break;
+      case 'project_request':
+        targetPath = `/Project/${notif.projectId}`;
+        break;
+      default:
+        targetPath = "/notifications"; 
+    }
+
+   
+    if (targetPath) {
+      router.push(targetPath);
+    }
+};
   return (
-    <div className="min-h-screen bg-[#FDFDFF] py-28 px-4 md:px-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-[#F8FAFF] pb-20 pt-32 px-4 md:px-6">
+   
+      <div className="max-w-5xl mx-auto">
         
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
-          <div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">
-              Notifications
-            </h1>
-            <p className="text-slate-500 font-medium flex items-center gap-2">
-              <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse"></span>
-              You have {notifications.filter(n => n.status === 'unread').length} unread messages
-            </p>
-          </div>
-          
-          <div className="flex gap-3">
-             <button className="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-600 hover:border-indigo-600 hover:text-indigo-600 transition-all shadow-sm">
-                <IoCheckmarkDoneCircleOutline size={18} />
-                Mark All Read
-             </button>
-             <button className="p-3 bg-white border border-slate-200 rounded-2xl text-rose-500 hover:bg-rose-50 transition-all shadow-sm">
-                <IoTrashOutline size={20} />
-             </button>
+     
+        <div className="relative overflow-hidden bg-indigo-900 rounded-[3rem] p-8 md:p-12 mb-12 shadow-2xl">
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-indigo-100 text-[10px] font-black uppercase mb-4">
+                <IoSparklesOutline /> Interaction Center
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
+                Activity <span className="text-indigo-400">Stream.</span>
+              </h1>
+              <p className="text-indigo-100/70 font-medium max-w-md">
+                You have <span className="text-white font-black">{unreadCount} unread</span> messages.
+              </p>
+            </div>
+            
+            <div className="flex gap-3">
+               <button onClick={handleMarkAllRead} className="flex items-center gap-2 px-6 py-3 bg-white text-indigo-900 rounded-2xl text-xs font-black uppercase shadow-lg transition-all active:scale-95">
+                 <IoCheckmarkDoneCircleOutline size={20} /> Mark Read
+               </button>
+               <button onClick={() => openDeleteModal(null)} className="p-3 bg-rose-500/20 border border-rose-500/30 text-rose-200 rounded-2xl hover:bg-rose-500 hover:text-white transition-all active:scale-95 flex items-center gap-2">
+                 <span className="text-xs font-bold uppercase ml-1">Clear All</span>
+                 <IoTrashOutline size={22} />
+               </button>
+            </div>
           </div>
         </div>
 
-        {/* Notifications List */}
-        <div className="grid gap-4">
+ 
+        <div className="grid gap-5">
           {loading ? (
-             // Skeleton Loader
-             [1,2,3,4].map(i => (
-               <div key={i} className="h-28 bg-slate-100 animate-pulse rounded-[2.5rem]" />
-             ))
+             [1,2,3].map(i => <div key={i} className="h-32 bg-white animate-pulse rounded-[2.5rem]" />)
           ) : notifications.length > 0 ? (
             notifications.map((notif) => (
-              <Link 
-                href={notif.relPath || `/Project/${notif.projectId}`} 
-                key={notif._id}
-                className={`group relative overflow-hidden bg-white border p-6 md:p-8 rounded-[2.5rem] transition-all duration-500 hover:shadow-[0_20px_50px_-20px_rgba(79,70,229,0.15)] ${
-                  notif.status === 'unread' ? 'border-indigo-100 shadow-sm shadow-indigo-50' : 'border-slate-100'
-                }`}
-              >
-                {/* Unread Indicator Side Bar */}
-                {notif.status === 'unread' && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-indigo-600" />
-                )}
-
-                <div className="flex items-center justify-between gap-6">
-                  <div className="flex items-center gap-6">
-                    {/* Icon Container */}
-                    <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all duration-500 shrink-0 ${
-                      notif.status === 'unread' 
-                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' 
-                      : 'bg-slate-50 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600'
-                    }`}>
-                      <IoNotificationsOutline size={28} />
-                    </div>
-
-                    {/* Text Content */}
-                    <div>
-                      <div className="flex items-center gap-3 mb-1">
-                        <h3 className="font-black text-slate-900 text-xl tracking-tight group-hover:text-indigo-600 transition-colors">
-                          {notif.title}
-                        </h3>
-                        <span className="hidden md:block px-3 py-1 bg-slate-100 text-[9px] font-black uppercase tracking-widest text-slate-500 rounded-full">
-                          {notif.type || 'Update'}
-                        </span>
-                      </div>
-                      <p className="text-slate-500 font-medium text-sm md:text-base mb-3 leading-relaxed">
-                        {notif.message}
-                      </p>
-                      
-                      {/* Meta Info */}
-                      <div className="flex items-center gap-4">
-                         <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 uppercase tracking-tighter cursor-help" title={new Date(notif.createdAt).toLocaleString()}>
-                            <IoTimeOutline size={14} className="text-indigo-500" />
-                            {format(notif.createdAt)}
-                         </div>
-                         {notif.status === 'unread' && (
-                           <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md uppercase">New</span>
-                         )}
-                      </div>
+              <div key={notif._id} className="group relative bg-white border border-slate-100 p-6 md:p-8 rounded-[2.5rem] transition-all hover:shadow-xl hover:shadow-indigo-500/5">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${notif.status === 'unread' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-200' : 'bg-slate-100 text-slate-400'}`}>
+                    <IoNotificationsOutline size={28} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className={`font-black text-xl mb-1 ${notif.status === 'unread' ? 'text-slate-900' : 'text-slate-600'}`}>{notif.title}</h3>
+                    <p className="text-slate-500 text-sm mb-3">{notif.message}</p>
+                    <div className="flex items-center gap-4 text-[10px] font-black text-slate-400 uppercase">
+                      <IoTimeOutline size={14} className="text-indigo-500" /> {format(notif.createdAt)}
                     </div>
                   </div>
-
-                  <div className="hidden sm:flex w-12 h-12 items-center justify-center rounded-full border border-slate-100 text-slate-300 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all duration-500 group-hover:translate-x-2">
-                    <IoChevronForward size={20} />
+                  <div className="flex items-center gap-3 self-end md:self-center">
+                    <button 
+                      onClick={(e) => { e.preventDefault(); openDeleteModal(notif._id); }}
+                      className="p-3 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all md:opacity-0 group-hover:opacity-100"
+                    >
+                      <IoTrashOutline size={20} />
+                    </button>
+                    <div onClick={()=>handleNotificationClick(notif)}  className="w-10 h-10 flex items-center justify-center rounded-full border border-slate-100 text-slate-300 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                      <IoChevronForward size={18} />
+                    </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))
           ) : (
             <div className="text-center py-32 bg-white rounded-[3rem] border-2 border-dashed border-slate-100">
-              <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <IoNotificationsOutline size={40} className="text-slate-200" />
-              </div>
-              <h3 className="text-xl font-black text-slate-900 mb-2">Your inbox is clear!</h3>
-              <p className="text-slate-400 font-medium">When you receive notifications, they will appear here.</p>
-              <Link href="/" className="inline-block mt-8 text-sm font-black text-indigo-600 uppercase tracking-widest border-b-2 border-indigo-600 pb-1">
-                Back to Home
-              </Link>
+              <IoNotificationsOutline size={40} className="text-slate-200 mx-auto mb-4" />
+              <h3 className="text-xl font-black text-slate-900">Inbox is empty</h3>
             </div>
           )}
         </div>
+
       </div>
+{/* Confiramtion Mesage */}
+    
+      <ConfrimMessageModal 
+        isOpen={conFrModalOpen}
+        onclose={() => setConFramModal(false)}
+        handleDelete={() => handleDelete(selectedId)}
+        isDeleting={isDeleting}
+        id={selectedId}
+      />
+         {/* message  */}
+       <MessageModal
+            isOpen={modal.open} 
+            type={modal.type} 
+            title={modal.title} 
+            message={modal.msg} 
+            onClose={() => setModal({ ...modal, open: false })}
+          />
     </div>
   );
 };
 
-export default page;
+export default NotificationPage;

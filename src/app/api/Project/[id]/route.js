@@ -21,7 +21,7 @@ export const POST = async (req, { params }) => {
      
     const {  solverEmail, buyerEmail, projectTitle ,solverId } = body;
  const projectId=id
-
+const user=await userColl.findOne({_id:new ObjectId(solverId)})
  console.log('porjectid',id)
     let projectUpdate = {};
     let requestsUpdate = {};
@@ -79,7 +79,7 @@ export const POST = async (req, { params }) => {
       };
 
       notificationData = {
-        recipient: solverEmail,
+        recipient: user.userEmail,
         sender: buyerEmail,
         type: "accept",
         title: "Work Accepted",
@@ -111,7 +111,7 @@ export const POST = async (req, { params }) => {
       };
 
       notificationData = {
-        recipient: solverEmail,
+        recipient: user.userEmail,
         sender: buyerEmail,
         type: "reject",
         title: "Work Rejected",

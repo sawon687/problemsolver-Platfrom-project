@@ -1,7 +1,9 @@
 import { getServerSession } from 'next-auth';
 import connect from '../../../lib/dbconnect';
 import { authOptions } from '../auth/[...nextauth]/route';
-
+import { ObjectId } from 'mongodb';
+import { NextResponse } from 'next/server';
+   const notificationColl =  connect('NotificationColl'); 
 export async function GET(req) {
     try {
        
@@ -17,9 +19,14 @@ export async function GET(req) {
  
         const { searchParams } = new URL(req.url);
         const email = searchParams.get('email');
-
+        const status=searchParams.get('status')
+        const query={ recipient: email }
+        if(status)
+        {
+            query.status=status
+        }
        
-        if (session.user.email !== email) {
+        if (session.email !== email) {
             return new Response(
                 JSON.stringify({ message: 'Forbidden access', success: false }),
                 { status: 403 }
@@ -27,11 +34,11 @@ export async function GET(req) {
         }
 
        
-        const notificationColl = await connect('NotificationColl'); 
+     
         
        
         const result = await notificationColl
-            .find({ recipient: email })
+            .find(query)
             .sort({ createdAt: -1 }) 
             .toArray();
 
@@ -54,4 +61,56 @@ export async function GET(req) {
             { status: 500 }
         );
     }
+}
+
+
+
+
+
+export async function DELETE(req) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get("email");
+    const id = searchParams.get("id");
+
+    if (!email) {
+      return NextResponse.json(
+        { error: "Email is required" },
+        { status: 400 }
+      );
+    }
+
+    let result;
+
+    if (id) {
+      // --- SINGLE DELETE LOGIC ---
+      if (!ObjectId.isValid(id)) {
+        return NextResponse.json(
+          { error: "Invalid Notification ID" },
+          { status: 400 }
+        );
+      }
+    
+      result = await notificationColl.deleteOne({ 
+        _id: new ObjectId(id), 
+        recipient: email 
+      });
+    } else {
+    
+      result = await notificationColl.deleteMany({ recipient: email });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: id ? "Notification deleted" : "All notifications cleared",
+      deletedCount: result.deletedCount,
+    });
+
+  } catch (error) {
+    console.error("Delete API Error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }

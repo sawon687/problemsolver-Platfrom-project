@@ -5,15 +5,15 @@ import React from 'react'
 import { FcGoogle } from 'react-icons/fc'
 
 const GoogleSIngupButton = ({role}) => {
-  console.log('role selection',role)
+ 
   const handleGoogleLogin = () => {
-    localStorage.setItem("role", role); // save role temporarily
+  
     signIn("google", role? { callbackUrl: "/Dashboard" }:null);
   };
 
   return (
     <div>
- <button className='btn w-full shadow-md flex mt-3' onClick={handleGoogleLogin}>
+ <button className='btn w-full py-3 shadow-md flex mt-3' onClick={handleGoogleLogin}>
       <FcGoogle size={20} />
       <p>Sign in with Google {role}</p>
       </button> </div>

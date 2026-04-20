@@ -85,7 +85,7 @@ console.log('project solver',project)
      
         <div className="lg:col-span-2">
        
-            <SubmittedTaskView projectId={project._id } />
+            <SubmittedTaskView projectId={project._id } projectTitle={project.projectTitle} />
         
           
         </div>

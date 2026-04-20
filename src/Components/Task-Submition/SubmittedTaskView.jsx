@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import { FaDownload, FaCheck, FaTimes, FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import MessageModal from '../AllModal/MessageModal';
+import { useSession } from 'next-auth/react';
 
-const SubmittedTaskView = ({ projectId }) => {
+const SubmittedTaskView = ({ projectId ,projectTitle}) => {
   const queryClient = useQueryClient();
+  const {data:session}=useSession()
   
 console.log('projectid',projectId)
   const [modal, setModal] = useState({ 
@@ -33,8 +35,9 @@ console.log('task',task)
       const res = await fetch(`/api/Project/${projectId}`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, solverId })
+        body: JSON.stringify({ action, solverId,buyerEmail:session?.email,projectTitle })
       });
+ 
       return res.json();
     },
     onSuccess: (result, variables) => {
@@ -74,7 +77,7 @@ console.log('task',task)
                <p className="text-rose-500  font-bold uppercase tracking-widest text-xs">No task submitted yet</p>
             </div>)
   return (
-    <div className="bg-white border border-slate-100 rounded-[2.5rem] shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="bg-white border z-0 border-slate-100 rounded-[2.5rem] shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="p-8">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-8">
@@ -152,7 +155,7 @@ console.log('task',task)
           </button>
 
           <button
-            onClick={() => handleAction('Rejected', task?.solverId)}
+            onClick={() => handleAction('Rejected', task?.solverId,)}
             disabled={mutation.isPending || task?.status === "Rejected"}
             className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-rose-100 hover:border-rose-500 disabled:border-slate-50 disabled:text-slate-300 text-rose-500 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all"
           >
