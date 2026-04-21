@@ -2,7 +2,7 @@ import connect from "@/lib/dbconnect";
 import { ObjectId } from "mongodb";
 
 const userColl=connect('userColl')
-export const GET = async (res,req) => {
+export const GET = async () => {
   try {
     
     const result = await userColl.find().toArray()

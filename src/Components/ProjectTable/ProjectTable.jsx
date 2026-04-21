@@ -2,10 +2,10 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ProjectCard from './ProjectCard';
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import ProjectSkeletons from '../LoadinSKelation/ProjectSkeletons';
 
 const ProjectTable = () => {
-  // TanStack Query দিয়ে ডাটা ফেচিং
+
   const { data: projects = [], isLoading, isError, refetch } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
@@ -15,12 +15,7 @@ const ProjectTable = () => {
     },
   });
 
-  if (isLoading) return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500 gap-3">
-      <AiOutlineLoading3Quarters className="animate-spin text-4xl text-emerald-500" />
-      <p className="font-medium animate-pulse">Loading projects...</p>
-    </div>
-  );
+  
 
   if (isError) return (
     <div className="text-center p-10 bg-red-50 rounded-2xl border border-red-200 text-red-600">
@@ -61,9 +56,14 @@ const ProjectTable = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {projects.map((proj, i) => (
+              {
+                isLoading?<ProjectSkeletons/>:<>
+                {projects.map((proj, i) => (
                 <ProjectCard index={i} project={proj} key={proj?._id} />
               ))}
+                
+                </>
+              }
             </tbody>
           </table>
         </div>

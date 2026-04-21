@@ -123,16 +123,16 @@ const ProjectRequestsPage = async () => {
                     </div>
 
                     <div className="flex items-center gap-4">
-    
+ 
 
-                      {req.status === 'in-progress' && (
-                        <Link href={`/Dashboard/My-Requsts/${req.projectId}/UploadedProject`}>
-                          <button className="bg-indigo-600 text-white px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all active:scale-95 shadow-md shadow-indigo-100">
-                            Submit <Send size={14} />
-                          </button>
-                        </Link>
-                      )}
-                    </div>
+  {['in-progress', 'Accept', 'Reject'].includes(req.status) && (
+       <Link href={`/Dashboard/My-Requsts/${req.projectId}/UploadedProject`}>
+      <button className="bg-indigo-600 text-white px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all active:scale-95 shadow-md shadow-indigo-100 hover:bg-indigo-700">
+        Submit <Send size={14} />
+      </button>
+    </Link>
+  )}
+</div>
                   </div>
                 </div>
               </div>

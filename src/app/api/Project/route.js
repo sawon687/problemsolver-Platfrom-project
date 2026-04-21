@@ -2,7 +2,7 @@ import connect from "@/lib/dbconnect";
 
 const projectColl = connect('projectColl');
 
-export const GET = async (req) => {
+export const GET = async () => {
   try {
   
     const result = await projectColl.find().toArray();

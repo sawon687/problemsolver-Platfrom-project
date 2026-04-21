@@ -8,27 +8,18 @@ import SolverDashboard from '../../Components/DashoboardLayout/SolverDashboard';
 
 const DashoBoardHome= () => {
   const{data:session}=useSession()
-    const { data: apiData = {}, isLoading } = useQuery({
-    queryKey: ['dashboard-data', session?.role],
-    queryFn: async () => {
-      const endpoint = session?.role === 'Admin' ? '/api/Admindata' : '/api/BuyerData';
-      const res = await fetch(endpoint);
-      const result = await res.json();
-      return result.result;
-    },
-    enabled: !!session?.role
-  });
+
   const role=session?.role
   return (
 
     <div>
        {
          role==='Admin' && (
-          <AdminDashboard apiData={apiData}></AdminDashboard>
+          <AdminDashboard ></AdminDashboard>
          )}
 
 {role==='Buyer' && (
-          <BuyerDashboard apiData={apiData}></BuyerDashboard>
+          <BuyerDashboard ></BuyerDashboard>
          )
        }
 

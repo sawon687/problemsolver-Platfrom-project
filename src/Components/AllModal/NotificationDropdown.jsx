@@ -100,7 +100,7 @@ const handleNotificationClick = async (notif) => {
       className={`w-10 h-10 flex items-center justify-center shadow-lg  rounded-xl transition-all relative ${
         notifOpen 
           ? "bg-indigo-600 text-white " 
-          : "text-slate-500 hover:bg-slate-100 bg-white"
+          : "text-white hover:bg-indigo-300 bg-gray-900"
       }`}
     >
       <IoNotificationsOutline size={20} />

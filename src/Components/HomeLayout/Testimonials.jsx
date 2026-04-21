@@ -45,10 +45,10 @@ const Testimonials = () => {
   const prevSlide = () => setCurrentIndex(prev => (prev - 1 + testimonials.length) % testimonials.length);
 
   return (
-    <section className="py-24 max-w-[1440px] mx-auto px-6 lg:px-10 relative z-10 bg-white">
+    <section className="py-24 max-w-[1440px] mx-auto px-6 lg:px-10 relative z-10">
       <div className="text-center mb-16">
         <h2 className="text-sm font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">Trusted Voices</h2>
-        <p className="text-4xl font-black text-slate-900 tracking-tighter">What Experts Say</p>
+        <p className="text-4xl font-black text-slate-900 tracking-tighter">What <span className='text-indigo-600'> Experts Say</span></p>
       </div>
 
       <div className="relative h-[400px] flex items-center justify-center">

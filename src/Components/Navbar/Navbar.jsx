@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ProfileDropdown from "../ProfileDropdown/ProfileDropdown";
 import SearchModal from "../searchModal/SearchModal";
 import NotificationDropdown from '../AllModal/NotificationDropdown';
+import Logo from '../Logo/Logo';
 
 const Navbar = () => {
   const { data, status } = useSession();
@@ -39,13 +40,27 @@ console.log('data',data)
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  if (pathname.startsWith("/Dashboard") || pathname.startsWith('/Register') || pathname.startsWith('/Login')) return null;
+
+  const hideNavbarPaths = [
+    "/Dashboard", 
+    "/Register", 
+    "/Login", 
+    '/unauthorized'
+  ];
+
+ const isAuthOrDashboard = hideNavbarPaths.some(path => pathname.startsWith(path));
+
+
+  const isNotFound = pathname === "/404" || pathname === "/not-found"; 
+
+if (isAuthOrDashboard || isNotFound) return null;
 
   const navItems = [
     { name: "Home", to: "/" },
     { name: "Project", to: "/Project" },
     { name: "About", to: "/About" },
     { name: "Contact", to: "/Contact" },
+     { name: "Blog", to: "/blog" },
   ];
 
   return (
@@ -59,23 +74,12 @@ console.log('data',data)
           {/* Main Container with Glassmorphism */}
           <div className={`flex items-center justify-between px-4 md:px-8 py-3 rounded-[32px] transition-all duration-700 border relative ${
             scrolled 
-            ? "bg-white/70 backdrop-blur-2xl border-white/40 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]" 
+            ? "bg-white/70 backdrop-blur-2xl  border-white/40 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]" 
             : "bg-transparent border-transparent"
           }`}>
             
             {/* Logo Section */}
-            <Link href="/" className="flex items-center gap-3 group relative z-10">
-              <div className="w-11 h-11 bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                <IoRocket size={22} />
-              </div>
-              <div className="flex flex-col -space-y-1">
-                <span className="font-black text-2xl tracking-tighter text-slate-900 leading-none">
-                  Raco<span className="text-indigo-600">AI</span>
-                </span>
-                <span className="text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">Innovation</span>
-              </div>
-            </Link>
-
+            <Logo colorName={'text-slate-900'}></Logo>
             {/* Desktop Navigation - Pill Design */}
             <nav className="hidden lg:block absolute left-1/2 -translate-x-1/2">
               <ul className="flex items-center p-1 bg-slate-100/40 backdrop-blur-md rounded-[22px] border border-slate-200/30">
@@ -85,7 +89,7 @@ console.log('data',data)
                       href={item.to}
                       className={`px-6 py-2.5 rounded-[18px] text-[11px] font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 ${
                         pathname === item.to 
-                        ? "bg-white text-indigo-600 shadow-sm" 
+                        ? "bg-gray-900 text-white shadow-sm" 
                         : "text-slate-500 hover:text-slate-900"
                       }`}
                     >
@@ -118,9 +122,10 @@ console.log('data',data)
                  
                   </div>
 
-                  {/* Profile Section */}
+                <div className='hidden md:block'>
+                    {/* Profile Section */}
                   <div 
-                    className="flex items-center gap-2 pl-2 pr-4 py-1.5 bg-slate-50 border border-slate-200 rounded-[20px] hover:border-indigo-300 hover:bg-white transition-all cursor-pointer group shadow-sm"
+                    className="flex  items-center gap-2 pl-2 pr-4 py-1.5 bg-slate-50 border border-slate-200 rounded-full hover:border-indigo-300 hover:bg-white transition-all cursor-pointer group shadow-sm"
                     onClick={() => setProfileOpen(!profileOpen)}
                   >
                     <img
@@ -131,13 +136,14 @@ console.log('data',data)
                     <IoChevronDown size={14} className={`text-slate-400 transition-transform duration-300 ${profileOpen ? 'rotate-180' : ''}`} />
                   </div>
 
+                </div>
                   <AnimatePresence>
                     {profileOpen && (
                       <motion.div 
                         initial={{ opacity: 0, y: 15, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                        className="absolute right-0 mt-[180px] min-w-[260px]"
+                        className="absolute  right-0 mt-[180px] min-w-[260px]"
                       >
                         <ProfileDropdown toggle={profileOpen} setToggle={setProfileOpen} />
                       </motion.div>
@@ -147,7 +153,7 @@ console.log('data',data)
               )}
 
               {status === "unauthenticated" && (
-                <div className='flex items-center gap-3'>
+                <div className='md:flex md:block hidden items-center gap-3'>
                   <Link
                     href="/Login"
                     className="hidden sm:block text-[11px] font-black uppercase tracking-widest text-slate-600 hover:text-indigo-600 px-4 transition-colors"
@@ -176,65 +182,142 @@ console.log('data',data)
       </header>
 
       {/* Mobile Drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div
-              className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60]"
-              onClick={() => setMobileOpen(false)}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            />
-            <motion.div
-              className="fixed right-0 top-0 h-full w-full max-w-[320px] bg-white z-[70] p-8 shadow-2xl flex flex-col"
-              initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            >
-              <div className="flex justify-between items-center mb-16">
-                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
-                      <IoRocket size={16} />
-                    </div>
-                    <span className="font-black text-xl tracking-tighter text-slate-900">RacoAI</span>
-                 </div>
-                <button onClick={() => setMobileOpen(false)} className="w-10 h-10 flex items-center justify-center bg-rose-50 text-rose-500 rounded-xl">
-                  <IoClose size={24} />
-                </button>
-              </div>
+           {/* Mobile Drawer */}
+ <AnimatePresence>
+  {mobileOpen && (
+    <>
+      {/* Backdrop with Blur */}
+      <motion.div
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60]"
+        onClick={() => setMobileOpen(false)}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      />
+      
+      {/* Sidebar Menu */}
+      <motion.div
+        className="fixed right-0 top-0 h-full w-[85%] max-w-[360px] bg-white z-[70] p-6 shadow-[-20px_0_50px_rgba(0,0,0,0.1)] flex flex-col"
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      >
+        {/* Header Section */}
+        <div className="flex justify-between items-center mb-10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+              <IoRocket size={20} />
+            </div>
+            <span className="font-black text-2xl tracking-tighter text-slate-900">RacoAI</span>
+          </div>
+          <button 
+            onClick={() => setMobileOpen(false)} 
+            className="w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-500 rounded-xl hover:bg-rose-50 hover:text-rose-500 transition-colors"
+          >
+            <IoClose size={24} />
+          </button>
+        </div>
 
-              <nav className="flex flex-col gap-8 flex-grow">
-                {navItems.map((item, idx) => (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    key={item.to}
-                  >
-                    <Link
-                      href={item.to}
-                      onClick={() => setMobileOpen(false)}
-                      className={`text-3xl font-black tracking-tighter ${
-                        pathname === item.to ? "text-indigo-600" : "text-slate-300 hover:text-slate-900"
-                      } transition-colors`}
-                    >
-                      {item.name}
-                    </Link>
-                  </motion.div>
-                ))}
-              </nav>
+        {/* User Profile Card (Authenticated State) */}
+        {status === 'authenticated' && (
+          <div 
+            className="mb-8 md:hidden p-4 bg-slate-50 rounded-3xl border border-slate-100  flex items-center justify-between group cursor-pointer"
+          
+          >
 
-              <div className="pt-10 border-t border-slate-100">
-                 <Link 
-                   href="/Register" 
-                   onClick={() => setMobileOpen(false)}
-                   className="w-full block text-center py-5 bg-indigo-600 text-white rounded-[24px] font-black uppercase tracking-widest text-xs shadow-2xl shadow-indigo-100"
-                 >
-                    Create Account
-                 </Link>
+                <Link 
+            href={'/Dashboard/Profile'}
+            
+            className="text-4xl font-black tracking-tighter text-slate-400 hover:text-indigo-600 transition-colors"
+              >
+              <div className="flex items-center gap-3">
+              <img
+                src={data?.userPhoto || "/avatar.png"}
+                className="w-12 h-12 rounded-2xl object-cover border-2 border-white shadow-sm"
+                alt="User"
+              />
+              <div>
+                <p className="text-sm font-black text-slate-900">{data?.name || "User"}</p>
+                <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">View Profile</p>
               </div>
-            </motion.div>
-          </>
+            </div>
+
+              </Link>
+          
+           
+          </div>
         )}
-      </AnimatePresence>
+
+        {/* Navigation Links */}
+        <nav className="flex flex-col gap-6 flex-grow">
+          {navItems.map((item, idx) => (
+            <motion.div
+              key={item.to}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 + idx * 0.05 }}
+            >
+              <Link
+                href={item.to}
+                onClick={() => setMobileOpen(false)}
+                className={`text-4xl font-black tracking-tighter block ${
+                  pathname === item.to ? "text-indigo-600" : "text-slate-400 hover:text-indigo-600"
+                } transition-colors`}
+              >
+                {item.name}
+              </Link>
+            </motion.div>
+          ))}
+
+            <Link 
+            href={'/Dashboard'}
+            
+            className="text-4xl font-black tracking-tighter text-slate-400 hover:text-indigo-600 transition-colors"
+              >Dashboard</Link>
+           
+            {status === 'unauthenticated' && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            > 
+          
+              <Link
+                href="/Login"
+                onClick={() => setMobileOpen(false)}
+                className="text-4xl font-black tracking-tighter text-slate-400 hover:text-indigo-600 transition-colors"
+              >
+                Log In
+              </Link>
+            </motion.div>
+          )}
+        </nav>
+
+        {/* Bottom Action Section */}
+        <div className="mt-auto pt-6 border-t border-slate-100">
+          {status === 'unauthenticated' ? (
+            <Link 
+              href="/Register" 
+              onClick={() => setMobileOpen(false)}
+              className="w-full block text-center py-5 bg-slate-900 text-white rounded-[24px] font-black uppercase tracking-[0.2em] text-[10px] shadow-xl hover:bg-indigo-600 transition-all active:scale-95"
+            >
+              Create Account
+            </Link>
+          ) : (
+            <button 
+              className="w-full py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold text-sm hover:bg-rose-50 hover:text-rose-500 transition-all"
+              onClick={() => signOut()}
+            >
+              Log Out
+            </button>
+          )}
+        </div>
+      </motion.div>
+    </>
+  )}
+</AnimatePresence>
+
 
       <SearchModal isOpen={searchOpen} setIsOpen={setSearchOpen} />
     </>

@@ -124,7 +124,6 @@ const ProjectUpoladed = ({ id }) => {
       const fileList = zipTree ? flattenFiles(zipTree) : [];
 
       const submitData = {
-    
         solverId,
         solverEmail:session?.email,
         status:"submited",
@@ -156,12 +155,17 @@ const ProjectUpoladed = ({ id }) => {
           open: true, 
           type: 'success', 
           title: 'Project Request successfully!', 
-          msg: Response.message || 'Your project has been successfully posted.', 
+          msg:result.message || 'Your project has been successfully posted.', 
         });
         setLoading(false);
            reset()
       }
-
+       setModal({ 
+          open: true, 
+          type: 'error', 
+          title: 'somting worng', 
+          msg:result.message || 'Your project has been successfully posted.', 
+        });
       console.log("✅ FINAL SUBMIT DATA:", submitData);
     } catch (error) {
       console.log(error);
@@ -192,7 +196,7 @@ const ProjectUpoladed = ({ id }) => {
             />
           </div>
 
-          {/* Live URL */}
+          {/* Live url*/}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
               <Globe size={16} /> Live Project URL

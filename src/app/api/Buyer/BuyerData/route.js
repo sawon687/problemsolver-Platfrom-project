@@ -1,25 +1,22 @@
 import connect from "@/lib/dbconnect";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from '../../auth/[...nextauth]/route';
 
-const projectColl = connect("projectColl");
-const requestColl=connect('RequestColl')
-const tasKColl=connect('taskCOll')
+
 export const GET = async (req) => {
   try {
-    const body=await req.json()
     const session = await getServerSession(authOptions);
-    console.log("session", session);
 
-    if (!session || session.role !== "Buyer") {
-      return new Response(
-        JSON.stringify({ message: "Unauthorized access" }),
-        { status: 401 }
-      );
+    if (!session || session?.role !== "Buyer") {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 });
     }
 
     const buyerId = session._id;
-    const projectId=body.projectId;
+    const projectColl = await connect("projectColl");
+    const requestColl = await connect('RequestColl');
+    const taskColl = await connect('taskColl');
+
+    
     const [
       projects,
       totalProjects,
@@ -28,70 +25,44 @@ export const GET = async (req) => {
       pendingReq,
       inprogressReq,
       acceptReq,
-      RejectReq,
-      pendignTask,
-      submitedTask,
+      rejectReq,
+      pendingTask,
+      submittedTask,
       acceptTask,
       rejectTask
-   
-
     ] = await Promise.all([
-      projectColl.find({ buyerId }).toArray(),
+      projectColl.find({ buyerId }).sort({ _id: -1 }).limit(5).toArray(), 
       projectColl.countDocuments({ buyerId }),
       projectColl.countDocuments({ buyerId, status: "Completed" }),
       projectColl.countDocuments({ buyerId, status: "assigned" }),
-      requestColl.countDocuments({buyerId,status:'pending'}),
-      requestColl.countDocuments({buyerId,status:'in-progress'}),
-      requestColl.countDocuments({projectId,status:'Accept'}),
-      requestColl.countDocuments({projectId,status:'Reject'}),
-      tasKColl.countDocuments({projectId,status:'pending'}),
-       tasKColl.countDocuments({projectId,status:'submited'}),
-        tasKColl.countDocuments({projectId,status:'Accept'}),
-         tasKColl.countDocuments({projectId,status:'Reject'})
-
-
+      requestColl.countDocuments({ buyerId, status: 'pending' }),
+      requestColl.countDocuments({ buyerId, status: 'in-progress' }),
+      requestColl.countDocuments({ buyerId, status: 'Accept' }),
+      requestColl.countDocuments({ buyerId, status: 'Reject' }),
+      taskColl.countDocuments({ buyerId, status: 'pending' }),
+      taskColl.countDocuments({ buyerId, status: 'submitted' }),
+      taskColl.countDocuments({ buyerId, status: 'Accept' }),
+      taskColl.countDocuments({ buyerId, status: 'Reject' })
     ]);
 
-    // total proposals
-    const totalProposals = projects.reduce((total, project) => {
-      return total + (project.requests?.length || 0);
-    }, 0);
-
-    // pending requests
-   
-
-    const data = {
-       projects,
+    const result = {
+      projects,
       totalProjects,
       completedProject,
       assignedProject,
       pendingReq,
       inprogressReq,
       acceptReq,
-      RejectReq,
-      pendignTask,
-      submitedTask,
+      rejectReq,
+      pendingTask,
+      submittedTask,
       acceptTask,
       rejectTask
     };
 
-    return new Response(
-      JSON.stringify({
-        result: data,
-        success: true,
-        message: "Data fetched successfully",
-      })
-    );
+    return new Response(JSON.stringify({ result, success: true }), { status: 200 });
   } catch (error) {
     console.error(error);
-    return new Response(
-      JSON.stringify({
-        message: "Failed to fetch data",
-        success: false,
-      }),
-      {
-        status: 500,
-      }
-    );
+    return new Response(JSON.stringify({ success: false }), { status: 500 });
   }
 };

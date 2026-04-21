@@ -63,3 +63,38 @@ export const POST= async (req,{params}) => {
     );
   }
 };
+
+//  user delete
+export const DELETE = async (req, { params }) => {
+  try {
+    const { id } =await params;
+
+    if (!ObjectId.isValid(id)) {
+      return new Response(JSON.stringify({ message: 'not valid id' }));
+    }
+
+    const query = { _id: new ObjectId(id) };
+    const result = await userColl.deleteOne(query);
+
+    if (!result) {
+      return new Response(JSON.stringify({ message: "user not found" }), { status: 404 });
+    }
+
+    return new Response(
+      JSON.stringify({ data: result, success: true, message:'User Delete SuccessFully', }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+       
+        
+      }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ success: false, message: "Error fetching user" }),
+      { status: 500 }
+    );
+  }
+};

@@ -5,8 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import DashboardContainer from '../../Components/Dashboard/DashboardContainer';
 
-
-// মেনু কনফিগারেশন
+// Dashboard menu link
 const menuConfig = {
   Admin: [
     { to: "/Dashboard", label: "Admin Overview", icon: "LayoutDashboard" },

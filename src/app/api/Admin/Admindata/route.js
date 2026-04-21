@@ -1,14 +1,14 @@
-import connect from "@/lib/dbconnect";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 
+import { getServerSession } from "next-auth";
+import { authOptions } from '../../auth/[...nextauth]/route';
+import connect from '../../../../lib/dbconnect';
 // collections
 const projectColl = connect("projectColl");
 const userColl = connect("userColl");
-
-export const GET = async (req) => {
+const requestColl = connect('RequestColl');
+export const GET = async () => {
   try {
-    //  session check
+ 
     const session = await getServerSession(authOptions);
 
     if (!session || session?.role !== "Admin") {
@@ -18,75 +18,45 @@ export const GET = async (req) => {
       );
     }
 
-    //  parallel queries (optimized)
-    const [
+ 
+   const [
       buyers,
       users,
       projects,
       totalUser,
       totalProjects,
-      newUser,
-      newProjectsCount,
-      newCompleted,
       totalBuyer,
       completeProject,
       assignedProject,
-      totalRejectProject
+      totalRejectProject,
+       pendingReq,
     ] = await Promise.all([
       userColl.find({ role: "Buyer" }).toArray(),
       userColl.find().toArray(),
       projectColl.find().toArray(),
-
       userColl.countDocuments(),
       projectColl.countDocuments(),
-
-      // last 24h new user
-      userColl.countDocuments({
-        createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-      }),
-
-      // last 24h new project
-      projectColl.countDocuments({
-        createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-      }),
-
-      // last 24h completed project
-      projectColl.countDocuments({
-        status: "completed",
-        updatedAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-      }),
-
       userColl.countDocuments({ role: "Buyer" }),
-
       projectColl.countDocuments({ status: "Completed" }),
       projectColl.countDocuments({ status: "assigned" }),
       projectColl.countDocuments({ status: "Rejected" }),
+      requestColl.countDocuments({status:'pending'})
     ]);
 
-    //  pending requests safe handling
-    const pendingReq = projects
-      .map((project) => project.requests || [])
-      .flat()
-      .filter((req) => req.status === "pending");
-
+   
     //  final response data
     const data = {
       users,
       buyers,
       projects,
-
       totalUser,
       totalProjects,
       totalBuyer,
-
       completeProject,
       assignedProject,
-
-      pendingCompleteReq: pendingReq,
-    totalRejectProject,
-      newUser,
-      newProjectsCount,
-      newCompleted,
+      pendingReq,
+      totalRejectProject,
+   
     };
 
     console.log("admin dashboard data:", data);

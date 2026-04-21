@@ -13,7 +13,7 @@ const GoogleSIngupButton = ({role}) => {
 
   return (
     <div>
- <button className='btn w-full py-3 shadow-md flex mt-3' onClick={handleGoogleLogin}>
+ <button className='btn w-full py-6 shadow-md  rounded-2xl flex mt-3' onClick={handleGoogleLogin}>
       <FcGoogle size={20} />
       <p>Sign in with Google {role}</p>
       </button> </div>

@@ -52,8 +52,8 @@ export const authOptions = {
   try {
  
            if (!user?.email && !user?.userEmail) {
-  console.log("No email পাওয়া যায়নি");
-  return false;
+  
+                   return false;
 }
       
             const newUSer={
@@ -82,22 +82,22 @@ export const authOptions = {
   }
   },
 async redirect({ url, baseUrl }) {
-  // যদি url relative হয় → baseUrl যোগ কর
+  // 
   if (url.startsWith("/"))
     { 
      
    
        return `${baseUrl}${url}`; }
 
-  // যদি absolute url হয় → 그대로 ফেরত দাও
+  // 
   else if (new URL(url).origin === baseUrl) return url;
 
-  // অন্য সব ক্ষেত্রে → baseUrl
+  baseUrl
   return baseUrl;
 },
 async jwt({ token, user, account }) {
   if (account?.provider === 'google') {
-    // DB থেকে user read
+    // DB  user read
     const userColl = await connect('userColl');
     const dbUser = await userColl.findOne({ userEmail: token.email || user?.email });
 

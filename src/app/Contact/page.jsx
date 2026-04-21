@@ -7,10 +7,10 @@ const bannerImg = "https://images.unsplash.com/photo-1521791136064-7986c2920216?
 
 const ContactPage = () => {
   return (
-    <div className="min-h-screen bg-slate-50/30 text-slate-900 overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50/30 text-slate-900 -mt-20  overflow-x-hidden">
       
       {/* --- HERO BANNER --- */}
-      <div className="relative h-[450px] w-full overflow-hidden">
+      <div className="relative h-[450px] w-full  overflow-hidden">
         <img
           src={bannerImg}
           alt="Contact RacoAI"

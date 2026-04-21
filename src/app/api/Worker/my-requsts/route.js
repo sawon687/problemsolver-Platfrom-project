@@ -20,7 +20,7 @@ export const GET=async(req)=>{
           }                    
 
           const solverId=session?._id
-          console.log('solverID',solverId)
+
           const result=await requestColl.find({solverId}).toArray()
           
    

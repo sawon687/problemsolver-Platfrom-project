@@ -1,4 +1,4 @@
-// pages/api/save-role.js
+
 import connect from "@/lib/dbconnect";
 
 export const POST = async (req) => {

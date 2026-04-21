@@ -1,8 +1,10 @@
 import UserTable from "@/Components/UserMange/UserTable";
-import React from "react";
+import React, { Suspense } from "react";
+import UserSkeleton from '../../../Components/LoadinSKelation/UserSkeleton';
 
+// Data fetching function-ti thakbe
 const getuser = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/userInfo`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/Admin/userInfo`, {
     method: "GET",
     cache: "no-cache",
   });
@@ -10,9 +12,19 @@ const getuser = async () => {
   return result.data;
 };
 
-const Page = async () => {
-  const user = await getuser();
 
+const UserList = async () => {
+  const user = await getuser();
+  return (
+    <>
+      {user?.map((u) => (
+        <UserTable key={u._id} user={u} />
+      ))}
+    </>
+  );
+};
+
+const Page = () => {
   return (
     <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       <div className="max-w-6xl mx-auto bg-white shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-200 overflow-hidden">
@@ -22,8 +34,9 @@ const Page = async () => {
           <h2 className="text-xl font-bold text-white tracking-tight">
             User Management Panel
           </h2>
+          {/* Note: Total count ekhane 0 thakbe loading-er somoy */}
           <span className="bg-indigo-500 text-white text-xs px-3 py-1 rounded-full font-medium">
-            {user?.length || 0} Total Users
+            Manage Users
           </span>
         </div>
 
@@ -41,9 +54,10 @@ const Page = async () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {user?.map((u) => (
-                <UserTable key={u._id} user={u} />
-              ))}
+              {/* Suspense ekhon trigger hobe karon UserList ekti async component */}
+              <Suspense fallback={<UserSkeleton />}>
+                <UserList />
+              </Suspense>
             </tbody>
           </table>
         </div>

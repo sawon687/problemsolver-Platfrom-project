@@ -4,23 +4,24 @@ import { useQuery } from '@tanstack/react-query';
 import SolverInfo from '../SolverInfo/SolverInfo';
 import { IoCalendarOutline, IoWalletOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
 import SubmittedTaskView from '../Task-Submition/SubmittedTaskView';
+import NormalLoading from '../LoadinSKelation/NormalLoading';
 
 const ProjectDetailPage = ({ id }) => {
   
-  const { data: project, isLoading, error } = useQuery({
+  const { data: apidata, isLoading, error } = useQuery({
     queryKey: ['project', id],
     queryFn: async () => {
       const res = await fetch(`/api/user-project/${id}`);
       const data = await res.json();
-      return data.data;
+      return data.result;
     },
     enabled: !!id,
   });
-console.log('project solver',project)
+console.log('project solver',apidata)
+
+const project=apidata?.project;
   if (isLoading) return (
-    <div className="flex justify-center items-center min-h-[400px]">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-    </div>
+          <NormalLoading></NormalLoading>
   );
 
   if (error) return <div className="text-center text-red-500 py-10">Error loading project.</div>;
@@ -78,8 +79,7 @@ console.log('project solver',project)
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       
         <div className="lg:col-span-1">
-          <SolverInfo solverId={project?.assignedSolverId
-} />
+          <SolverInfo solverId={project?.assignedSolverId} />
         </div>
 
      

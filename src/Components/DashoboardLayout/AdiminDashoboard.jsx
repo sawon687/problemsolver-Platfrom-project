@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useMemo } from "react";
 import { 
   Moon, Sun, Users, CheckCircle, ClipboardList, 
@@ -12,6 +11,8 @@ import {
 } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import DashboardSkeletonAdmin from '../LoadinSKelation/DashboardSkeletonAdmin';
+
 
 // --- Animated Count Component ---
 const Count = ({ end, duration = 2 }) => {
@@ -42,20 +43,22 @@ const AdminDashboard = () => {
   const { data: apiData = {}, isLoading } = useQuery({
     queryKey: ['dashboard-data', session?.role],
     queryFn: async () => {
-      const endpoint = session?.role === 'Admin' ? '/api/Admindata' : '/api/BuyerData';
-      const res = await fetch(endpoint);
+      const res = await fetch(`/api/Admin/Admindata`);
       const result = await res.json();
+      console.log('result data',result)
       return result.result;
     },
-    enabled: !!session?.role
+    enabled: !!session?.role,
+    refetchOnWindowFocus: false,
   });
 
-  // --- ১. সাপ্তাহিক পারফরম্যান্স ক্যালকুলেশন (Weekly Performance Logic) ---
+  
+          //   Weeck Permormance
   const weeklyData = useMemo(() => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const counts = days.map(day => ({ d: day, v: 0 }));
     
-    // API থেকে প্রজেক্টগুলো নিয়ে বারে বসানো
+  
     if (apiData?.projects) {
       apiData.projects.forEach(proj => {
         const dayIndex = new Date(proj.createdAt).getDay();
@@ -65,7 +68,7 @@ const AdminDashboard = () => {
     return counts;
   }, [apiData]);
 
-  // --- ২. মাসিক গ্রোথ ভেলোসিটি (Monthly Growth Logic) ---
+  // --- Monthly Growth Logic ---
   const growthData = useMemo(() => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const data = months.map(m => ({ n: m, v: 0 }));
@@ -76,12 +79,12 @@ const AdminDashboard = () => {
         data[monthIndex].v += 1;
       });
     }
-    // কারেন্ট মাস পর্যন্ত ডেটা ফিল্টার করা যাতে চার্ট সুন্দর দেখায়
+
     const currentMonth = new Date().getMonth();
     return data.slice(0, currentMonth + 1);
   }, [apiData]);
 
-  // --- ৩. এফিসিয়েন্সি এবং স্ট্যাটাস ক্যালকুলেশন ---
+
   const efficiency = useMemo(() => {
     const total = apiData?.totalProjects || 0;
     const completed = apiData?.completeProject || 0;
@@ -103,13 +106,12 @@ const AdminDashboard = () => {
     { name: 'Rejected', value: apiData?.totalRejectProject || 0, color: '#f43f5e' },
   ], [apiData]);
 
-  if (isLoading) return <div className="h-screen flex items-center justify-center font-black text-indigo-600 animate-pulse tracking-[0.3em]">NEXUS LOADING...</div>;
-
+  if (isLoading) return <DashboardSkeletonAdmin></DashboardSkeletonAdmin>
   return (
-    <div className={`${darkMode ? "bg-[#05070a] text-slate-100" : "bg-[#f8fafc] text-slate-900"} min-h-screen pb-20 transition-colors duration-500 font-sans`}>
+    <div className={` min-h-screen pb-20 transition-colors duration-500 font-sans`}>
       
       {/* --- Header --- */}
-      <header className="backdrop-blur-md bg-white/70 dark:bg-[#05070a]/70 border-b border-slate-200/50 dark:border-slate-800/50 px-8 py-4">
+      <header className="backdrop-blur-md bg-white/70  border-b border-slate-200/50  px-8 py-4">
         <div className="max-w-[1600px] mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="w-11 h-11 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-500/30">
@@ -118,10 +120,8 @@ const AdminDashboard = () => {
             <h1 className="text-lg font-black tracking-tighter uppercase">Nexus <span className="text-indigo-600 italic">Core</span></h1>
           </div>
           <div className="flex items-center gap-6">
-            <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-all">
-              {darkMode ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-indigo-600" />}
-            </button>
-            <div className="flex items-center gap-3 bg-white dark:bg-slate-900 p-1 pr-4 rounded-full border border-slate-200 dark:border-slate-800">
+          
+            <div className="flex items-center gap-3 bg-white p-1 pr-4 rounded-full border border-slate-200 ">
                <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-[10px] font-bold text-white uppercase border-2 border-white">{session?.user?.name?.[0] || 'A'}</div>
                <span className="text-[11px] font-black uppercase tracking-tight">{session?.user?.name || "Sawon Ahmed"}</span>
             </div>
@@ -134,7 +134,7 @@ const AdminDashboard = () => {
         {/* --- Stats Cards --- */}
         <section className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
           {stats.map((stat) => (
-            <motion.div key={stat.id} whileHover={{ y: -5 }} className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col gap-4">
+            <motion.div key={stat.id} whileHover={{ y: -5 }} className="bg-white  p-6 rounded-[2rem] border border-slate-100  shadow-sm flex flex-col gap-4">
               <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-white shadow-lg`}>
                 {stat.icon}
               </div>

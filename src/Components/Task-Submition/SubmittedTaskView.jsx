@@ -27,7 +27,7 @@ console.log('projectid',projectId)
     },
     enabled: !!projectId, 
   });
-// Task Accepted and rejected function
+// accept and reject
 
 console.log('task',task)
   const mutation = useMutation({

@@ -1,12 +1,12 @@
-import Register from '@/Components/auth/Register';
 import React from 'react';
 import { motion } from "framer-motion";
-import RoleSelect from '@/Components/auth/RoleSelect';
+import RegisterForm from '../../Components/auth/RegisterForm';
+
 const page = () => {
     return (
         <div>   
-        <RoleSelect></RoleSelect>
-        
+       
+      <RegisterForm></RegisterForm>
         </div>
     );
 };

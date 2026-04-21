@@ -9,7 +9,7 @@ const ProfileDropdown = ({ toggle, setToggle }) => {
 
   return createPortal(
     <div
-      className="fixed right-10 top-20 z-[9999]"
+      className="fixed right-10 md:top-20 top-40 z-[9999]"
       onClick={() => setToggle(false)}
     >
       <ProfileCard />

@@ -1,138 +1,138 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Search, LogOut, User, ExternalLink, Mail } from "lucide-react";
-import { IoNotificationsOutline, IoRocket, IoChevronUp } from 'react-icons/io5';
+import { 
+  ChevronLeft, ChevronRight, Search, LogOut, User, 
+  Mail, Menu, Maximize, Command, Calendar 
+} from "lucide-react";
+import { IoRocket, IoChevronUp } from 'react-icons/io5';
 import SidebarItem from './SidebarItem';
 import NotificationDropdown from '../AllModal/NotificationDropdown';
+import Logo from '../Logo/Logo';
+import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function DashboardContainer({ children, session, menuItems }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [notifOpen, setNotifOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
 
   return (
     <div className="flex h-screen bg-[#F8FAFC] -mt-20 overflow-hidden text-slate-800 font-sans">
       
-      {/* --- sidbar --- */}
+{/* sidbar */}
       <motion.aside
         animate={{ width: isCollapsed ? 90 : 280 }}
-        className="bg-white border-r border-slate-200 flex flex-col relative z-[60] shadow-sm"
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="bg-gray-950 border-r border-white/5 flex flex-col relative z-[60] shadow-2xl  h-full shrink-0"
       >
-      
+           {/* Toggle button sidbar  */}
         <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute -right-3 top-12 bg-indigo-600 text-white p-1.5 rounded-full shadow-lg z-[70] hover:scale-110 transition-transform"
+          onClick={(e) =>{ e.stopPropagation(); setIsCollapsed(!isCollapsed)}}
+          className="absolute -right-3 top-12 bg-indigo-600 text-white p-1.5 rounded-full shadow-lg z-[70] hover:scale-110 transition-transform hidden lg:flex items-center justify-center border border-white/10"
         >
           {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>
 
-        {/* Logo */}
-        <div className="p-6 h-20 flex items-center overflow-hidden">
-          <div className="min-w-[45px] h-11 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-indigo-200 shadow-xl">
-            <IoRocket size={22} />
-          </div>
-          {!isCollapsed && (
-            <motion.span
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="ml-3 text-2xl font-black tracking-tighter text-slate-900"
-            >
-              Raco<span className="text-indigo-600">AI</span>
-            </motion.span>
+        {/* Logo Section */}
+        <div className="p-6 h-24 flex items-center overflow-hidden">
+          {isCollapsed ? (
+            <div className="mx-auto w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-white border border-indigo-500/20 shadow-inner">
+              <IoRocket size={24} className="text-indigo-500" />
+            </div>
+          ) : (
+            <Logo colorName={'text-white'} />
           )}
         </div>
 
-   
-        <nav className="flex-1 px-4 mt-6 space-y-2 overflow-y-auto no-scrollbar relative z-10">
+        {/* Navigation Items */}
+        <nav className="flex-1 px-4 mt-4 space-y-2 overflow-y-auto no-scrollbar relative z-10">
+          <p className={`text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4 px-4 ${isCollapsed ? 'hidden' : 'block'}`}>
+            Main Dashboard
+          </p>
           {menuItems.map((item) => (
             <SidebarItem key={item.to} {...item} isCollapsed={isCollapsed} />
           ))}
         </nav>
 
- 
-        <div className='relative mt-auto mx-3 mb-4 pt-12 pb-6 px-4 rounded-[2.5rem] bg-gradient-to-br from-[#1E293B] via-[#0F172A] to-[#1E1B4B] border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] group'>
-          
-          <div className="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/20 blur-[40px] rounded-full group-hover:bg-indigo-500/40 transition-all duration-700"></div>
-          
-          <div className="relative z-10">
+        {/* Profile Section (With Tail/Arrow) */}
+        <div className="p-4 mt-auto border-t border-white/5 bg-black/20">
+          <div className="relative">
             <AnimatePresence>
               {userMenuOpen && !isCollapsed && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9, y: 15 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9, y: 15 }}
-                  
-                  className="absolute bottom-[110%] left-0 right-0 bg-[#0F172A]/95 backdrop-blur-2xl rounded-[2rem] p-5 shadow-[0_25px_60px_rgba(0,0,0,0.5)] border border-white/10 z-[100]"
+                  initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 12, scale: 0.95 }}
+                  className="absolute bottom-[115%] left-0 right-0 bg-[#161B26] border border-white/10 rounded-[1.8rem] p-4 shadow-[0_25px_60px_rgba(0,0,0,0.5)] z-[120] mb-2"
                 >
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 pb-4 border-b border-white/5">
-                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-                        <Mail size={18} />
+                  <div className="space-y-3 text-white">
+                    <div className="flex items-center gap-3 pb-3 border-b border-white/5">
+                      <div className="w-8 h-8 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 border border-indigo-500/10">
+                        <Mail size={14} />
                       </div>
                       <div className="overflow-hidden">
-                        <p className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.15em] mb-0.5">Verified Identity</p>
-                        <p className="text-xs text-slate-300 truncate font-medium">{session?.user?.email || "sawon@racoai.dev"}</p>
+                        <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-tighter leading-none mb-1">Email Identity</p>
+                        <p className="text-[11px] text-slate-400 truncate font-medium">{session?.user?.email || "sawon@racoai.dev"}</p>
                       </div>
                     </div>
                     
-                    <div className="grid gap-1.5">
-                      <button className="flex items-center justify-between w-full px-4 py-3 text-[11px] font-bold text-slate-300 transition-all rounded-xl hover:bg-white/5 hover:text-white group/btn">
-                        <div className="flex items-center gap-3">
-                          <User size={16} className="text-indigo-400 group-hover/btn:scale-110 transition-transform" /> 
-                          Manage Profile
-                        </div>
-                        <ExternalLink size={14} className="text-slate-600 group-hover/btn:text-white transition-colors" />
+                    <div className="grid gap-1">
+                          <Link href='/Dashboard/Profile'>
+                           <button className="flex items-center gap-3 w-full px-3 py-2.5 text-[11px] font-bold text-slate-300 hover:bg-white/5 rounded-xl transition-all">
+                        <User size={15} className="text-indigo-500" /> Account Settings
                       </button>
-
-                      <button className="flex items-center gap-3 w-full px-4 py-3 text-[11px] font-black text-rose-400 uppercase tracking-widest transition-all rounded-xl bg-rose-500/5 hover:bg-rose-500 hover:text-white mt-1 shadow-inner">
-                        <LogOut size={16} /> Secure Logout
+                          </Link>
+                            
+                            <button onClick={()=>  signOut()} className="flex items-center gap-3 w-full px-3 py-2.5 text-[11px] font-black text-rose-400 uppercase tracking-widest bg-rose-500/5 hover:bg-rose-500 hover:text-white rounded-xl transition-all">
+                        <LogOut size={15} /> Logout Account
                       </button>
                     </div>
+                      
                   </div>
-                  
-                 
-                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#0F172A] rotate-45 border-r border-b border-white/10"></div>
+                
+                  <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#161B26] rotate-45 border-r border-b border-white/10"></div>
                 </motion.div>
               )}
             </AnimatePresence>
 
-          
             <button 
               onClick={() => setUserMenuOpen(!userMenuOpen)}
-              className={`w-full flex items-center gap-3 p-3 rounded-[1.8rem] bg-white/5 hover:bg-white/10 border border-white/5 transition-all duration-300 relative group shadow-2xl ${isCollapsed ? 'justify-center px-2' : ''}`}
+              className={`w-full flex items-center gap-3 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all duration-300 group ${isCollapsed ? 'justify-center px-2' : ''}`}
             >
-              <div className="relative">
-                <div className="absolute inset-0 bg-indigo-500 blur-[8px] opacity-20 group-hover:opacity-40 transition-opacity rounded-xl"></div>
+              <div className="relative shrink-0">
                 <img 
                   src={session?.userPhoto || "/avatar.png"} 
-                  className="relative z-10 object-cover w-10 h-10 rounded-xl border border-white/10" 
+                  className="w-10 h-10 rounded-xl object-cover ring-2 ring-indigo-500/20 group-hover:ring-indigo-500/40 transition-all" 
                   alt="user" 
                 />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#1E293B] z-20"></span>
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0B0F1A] rounded-full shadow-lg"></span>
               </div>
               
               {!isCollapsed && (
-                <div className="relative z-10 flex-1 text-left overflow-hidden">
-                  <p className="text-[13px] font-black text-white tracking-tight truncate leading-none mb-1">
-                    {session?.username || "Sawon"}
-                  </p>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
-                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
-                      {session?.role || "Core Dev"}
-                    </p>
-                  </div>
+                <div className="flex-1 text-left overflow-hidden">
+                  <p className="text-[13px] font-black text-white truncate leading-none mb-1">{session?.username || "Sawon"}</p>
+                  <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.15em]">{session?.role || "Core Dev"}</p>
                 </div>
               )}
               
               {!isCollapsed && (
-                <motion.div
-                  animate={{ rotate: userMenuOpen ? 180 : 0 }}
-                  className="text-slate-500 group-hover:text-white transition-colors"
-                >
-                  <IoChevronUp size={16} />
+                <motion.div animate={{ rotate: userMenuOpen ? 180 : 0 }}>
+                  <IoChevronUp size={14} className="text-slate-500 group-hover:text-white transition-colors" />
                 </motion.div>
               )}
             </button>
@@ -142,26 +142,49 @@ export default function DashboardContainer({ children, session, menuItems }) {
 
       {/* --- Main Content --- */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-8 relative z-[50]">
-           <div className="relative max-w-md w-full hidden md:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <input type="text" placeholder="Search tasks..." className="h-10 w-full bg-slate-100 rounded-xl pl-10 pr-4 text-sm border-none focus:ring-2 focus:ring-indigo-500/20 outline-none" />
+        <header className="h-20 bg-white/70 backdrop-blur-xl border-b border-slate-200/60 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-[50]">
+           <div className="flex items-center gap-4 flex-1">
+             <button onClick={()=> setIsCollapsed(!isCollapsed)} className="lg:hidden p-2.5 bg-slate-100 rounded-xl text-slate-600">
+               <Menu size={20} />
+             </button>
+
+             <div className="relative max-w-md w-full group hidden lg:block">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                  <Search size={18} />
+                </div>
+                <input 
+                  type="text" 
+                  placeholder="Quick search anything..." 
+                  className="h-11 w-full bg-slate-100/50 rounded-2xl pl-12 pr-12 text-[13px] border border-transparent focus:bg-white focus:border-indigo-200 focus:ring-4 focus:ring-indigo-500/5 outline-none transition-all shadow-sm"
+                />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 px-1.5 py-1 bg-white border border-slate-200 rounded-md shadow-sm">
+                  <Command size={10} className="text-slate-400" />
+                  <span className="text-[9px] font-bold text-slate-400">K</span>
+                </div>
+             </div>
            </div>
            
-           <div className="flex items-center gap-4">
-              <div className="relative">
-                 
-                 
-                       <NotificationDropdown  />
-                   
+           <div className="flex items-center gap-3">
+             <div className="hidden xl:flex items-center gap-2 mr-4 text-slate-400">
+                <Calendar size={14} />
+                <span className="text-[11px] font-bold uppercase tracking-wider">{currentTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+             </div>
+
+             <button onClick={toggleFullscreen} className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all hidden sm:block">
+                <Maximize size={18} />
+             </button>
              
-              </div>
-              <div className="h-8 w-[1px] bg-slate-200"></div>
-              <p className="text-sm font-bold text-slate-700 hidden sm:block italic">Operational Control</p>
+             <NotificationDropdown />
+             
+             <div className="h-8 w-[1px] bg-slate-200 mx-2"></div>
+             
+             <button className="bg-[#0B0F1A] text-white px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl active:scale-95">
+                New Task
+             </button>
            </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-6 lg:p-10 relative z-10 custom-scrollbar">
+        <main className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar bg-[#F8FAFC]">
           {children}
         </main>
       </div>

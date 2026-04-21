@@ -32,15 +32,8 @@ export async function GET(req) {
                 { status: 403 }
             );
         }
-
        
-     
-        
-       
-        const result = await notificationColl
-            .find(query)
-            .sort({ createdAt: -1 }) 
-            .toArray();
+        const result = await notificationColl.find(query).sort({ createdAt: -1 }).toArray();
 
         return new Response(
             JSON.stringify({ 

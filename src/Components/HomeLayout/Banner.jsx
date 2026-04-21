@@ -4,28 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { IoRocketOutline, IoBriefcaseOutline, IoArrowForward } from "react-icons/io5";
 
-const banners = [
-  {
-    id: 1,
-    title: "Welcome to Problem Solver",
-    subtitle: "The ultimate marketplace to connect, manage, and deliver projects efficiently with AI-powered tools.",
-    img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1470&q=80",
-  },
-  {
-    id: 2,
-    title: "Hire Expert Problem Solvers",
-    subtitle: "Find the top 1% talented solvers specialized in digital logic, web development, and more.",
-    img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1470&q=80",
-  },
-  {
-    id: 3,
-    title: "Track Your Success Seamlessly",
-    subtitle: "Our dashboard allows you to manage tasks, timelines, and deliverables in one unified place.",
-    img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1470&q=80",
-  },
-];
 
-const Banner = () => {
+
+const Banner = ({banners}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const intervalRef = useRef(null);
@@ -43,11 +24,11 @@ const Banner = () => {
   }, [isPaused]);
 
   return (
-    <section className="w-full bg-slate-50 py-10 lg:py-16">
+    <section className="w-full  py-10 lg:py-16">
       <div className="max-w-[1440px] mx-auto px-4 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[550px]">
           
-          {/* LEFT SIDE - DYNAMIC SLIDER (8 Columns) */}
+          {/* Left Side */}
           <div
             className="lg:col-span-8 relative rounded-[32px] overflow-hidden shadow-2xl group border border-slate-200"
             onMouseEnter={() => setIsPaused(true)}

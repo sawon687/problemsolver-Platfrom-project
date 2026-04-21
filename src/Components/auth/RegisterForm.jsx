@@ -7,9 +7,9 @@ import {
   FiUser, FiMail, FiLock, FiPhone, 
   FiDollarSign, FiZap, FiCamera, FiArrowRight, 
   FiCheckCircle, FiBriefcase, FiUserCheck,
-  FiTarget, FiMapPin // এই আইকনগুলো ইমপোর্ট করা ছিল না
+  FiTarget, FiMapPin 
 } from 'react-icons/fi';
-import { Loader2, ChevronLeft, EyeOff, Eye } from 'lucide-react';
+import { Loader2, ChevronLeft, EyeOff, Eye, AlertCircle } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 
 const countryCodes = [
@@ -18,13 +18,22 @@ const countryCodes = [
   { name: "US", code: "+1" },
 ];
 
-const Register = () => {
+const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1); 
-  const [role, setRole] = useState(null); // 'worker' or 'buyer'
+  const [role, setRole] = useState(null); 
   const [imagePreview, setImagePreview] = useState(null);
   const [showPass, setShowPass] = useState(false);
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+   const [modal, setModal] = useState({ 
+      open: false, 
+      type: 'success', 
+      title: '', 
+      msg: '' 
+    });
+  
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+    mode: "onChange" 
+  });
 
   const handleRegister = async (data) => {
     setLoading(true);
@@ -65,11 +74,30 @@ const Register = () => {
         await signIn("credentials", {
           email: data.userEmail, 
           password: data.password,
-          callbackUrl: "/"
+          callbackUrl: "/Dashboard"
         });
-        alert(result.message);
+     
+                setModal({ 
+          open: true, 
+          type: 'success', 
+          title: 'Register Successfully', 
+          msg:result.message, 
+        });
+        
+        
+      
       } else {
-        alert(result.message || "Registration failed");
+
+          
+                setModal({ 
+          open: true, 
+          type: 'error', 
+          title: 'Register', 
+          msg:result.message || "Registration failed", 
+        });
+          refetch()
+        
+     
       }
 
     } catch (err) {
@@ -80,8 +108,21 @@ const Register = () => {
     }
   };
 
+ 
+  const ErrorMsg = ({ name }) => (
+    errors[name] && (
+      <motion.p 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-[10px] text-red-500 font-bold mt-1 flex items-center gap-1 ml-1"
+      >
+        <AlertCircle size={10} /> {errors[name].message}
+      </motion.p>
+    )
+  );
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] p-4 md:p-8 relative overflow-hidden">
+    <div className="min-h-screen flex -mt-20 items-center justify-center bg-[#f8fafc] p-4 md:p-8 relative overflow-hidden">
       
       {/* Background Orbs */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
@@ -183,7 +224,7 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit(handleRegister)} className="space-y-5">
                   {/* Photo Upload */}
-                  <div className="flex items-center gap-6 p-4 bg-slate-50 rounded-[2rem] border border-slate-100 group">
+                  <div className={`flex items-center gap-6 p-4 bg-slate-50 rounded-[2rem] border ${errors.photo ? 'border-red-300' : 'border-slate-100'} group transition-all`}>
                     <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-2xl bg-white border-2 border-indigo-100 shadow-inner">
                       {imagePreview ? (
                         <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
@@ -202,7 +243,7 @@ const Register = () => {
                           className="hidden" 
                           accept="image/*"
                           {...register('photo', { 
-                            required: true,
+                            required: "Photo is required",
                             onChange: (e) => {
                               const file = e.target.files[0];
                               if (file) setImagePreview(URL.createObjectURL(file));
@@ -210,7 +251,7 @@ const Register = () => {
                           })} 
                         />
                       </label>
-                        <p className="text-[10px] text-slate-400 mt-1 uppercase">JPG, PNG or WebP</p>
+                      <ErrorMsg name="photo" />
                     </div>
                   </div>
 
@@ -218,35 +259,56 @@ const Register = () => {
                     <div className="space-y-1">
                       <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Username</label>
                       <div className="relative group">
-                        <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input {...register('username', {required: true})} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3.5 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all" placeholder="john_doe" />
+                        <FiUser className={`absolute left-4 top-1/2 -translate-y-1/2 ${errors.username ? 'text-red-400' : 'text-slate-400'}`} />
+                        <input 
+                          {...register('username', { 
+                            required: "Username is required",
+                            minLength: { value: 3, message: "Too short (min 3)" }
+                          })} 
+                          className={`w-full bg-slate-50 border ${errors.username ? 'border-red-300 focus:border-red-500' : 'border-slate-100 focus:border-indigo-500'} rounded-2xl py-3.5 pl-12 text-sm font-bold outline-none transition-all`} 
+                          placeholder="john_doe" 
+                        />
                       </div>
+                      <ErrorMsg name="username" />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Email</label>
                       <div className="relative group">
-                        <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input {...register('userEmail', {required: true})} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3.5 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all" placeholder="name@email.com" />
+                        <FiMail className={`absolute left-4 top-1/2 -translate-y-1/2 ${errors.userEmail ? 'text-red-400' : 'text-slate-400'}`} />
+                        <input 
+                          {...register('userEmail', { 
+                            required: "Email is required",
+                            pattern: {
+                              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                              message: "Invalid email address"
+                            }
+                          })} 
+                          className={`w-full bg-slate-50 border ${errors.userEmail ? 'border-red-300 focus:border-red-500' : 'border-slate-100 focus:border-indigo-500'} rounded-2xl py-3.5 pl-12 text-sm font-bold outline-none transition-all`} 
+                          placeholder="name@email.com" 
+                        />
                       </div>
+                      <ErrorMsg name="userEmail" />
                     </div>
                   </div>
 
-                  {/* Role Based Fields (Fixed condition) */}
+                  {/* Role Based Fields */}
                   {role === "Buyer" ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="space-y-1">
                         <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Company Name</label>
                         <div className="relative">
                           <FiTarget className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                          <input {...register('company')} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all" placeholder="Acme Inc." />
+                          <input {...register('company', { required: "Company name is required" })} className={`w-full bg-slate-50 border ${errors.company ? 'border-red-300' : 'border-slate-100'} rounded-2xl py-4 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all`} placeholder="Acme Inc." />
                         </div>
+                        <ErrorMsg name="company" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Location</label>
                         <div className="relative">
                           <FiMapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                          <input {...register('location')} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all" placeholder="Dhaka, BD" />
+                          <input {...register('location', { required: "Location is required" })} className={`w-full bg-slate-50 border ${errors.location ? 'border-red-300' : 'border-slate-100'} rounded-2xl py-4 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all`} placeholder="Dhaka, BD" />
                         </div>
+                        <ErrorMsg name="location" />
                       </div>
                     </div>
                   ) : (
@@ -255,15 +317,17 @@ const Register = () => {
                         <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Expertise / Skill</label>
                         <div className="relative">
                           <FiZap className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                          <input {...register('skill')} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all" placeholder="Full Stack Developer" />
+                          <input {...register('skill', { required: "Skill is required" })} className={`w-full bg-slate-50 border ${errors.skill ? 'border-red-300' : 'border-slate-100'} rounded-2xl py-4 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all`} placeholder="Full Stack Developer" />
                         </div>
+                        <ErrorMsg name="skill" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Hourly Rate ($)</label>
                         <div className="relative">
                           <FiDollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                          <input type="number" {...register('hourlyRate')} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all" placeholder="25.00" />
+                          <input type="number" {...register('hourlyRate', { required: "Rate is required", min: { value: 1, message: "Must be > 0"} })} className={`w-full bg-slate-50 border ${errors.hourlyRate ? 'border-red-300' : 'border-slate-100'} rounded-2xl py-4 pl-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all`} placeholder="25.00" />
                         </div>
+                        <ErrorMsg name="hourlyRate" />
                       </div>
                     </div>
                   )}
@@ -271,22 +335,44 @@ const Register = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="space-y-1">
                       <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Phone Number</label>
-                      <div className="flex bg-slate-50 border border-slate-100 rounded-2xl focus-within:border-indigo-500 transition-all overflow-hidden">
+                      <div className={`flex bg-slate-50 border ${errors.phoneno ? 'border-red-300' : 'border-slate-100'} rounded-2xl focus-within:border-indigo-500 transition-all overflow-hidden`}>
                         <select className="bg-transparent pl-4 pr-1 py-4 text-xs font-black outline-none">
                           {countryCodes.map(c => <option key={c.code} value={c.code}>{c.code}</option>)}
                         </select>
-                        <input {...register('phoneno')} className="bg-transparent flex-1 py-4 px-2 text-sm font-bold outline-none" placeholder="1700000000" />
+                        <input 
+                          {...register('phoneno', { 
+                            required: "Phone required", 
+                            pattern: { value: /^[0-9]+$/, message: "Digits only" },
+                            minLength: { value: 10, message: "Too short" }
+                          })} 
+                          className="bg-transparent flex-1 py-4 px-2 text-sm font-bold outline-none" 
+                          placeholder="1700000000" 
+                        />
                       </div>
+                      <ErrorMsg name="phoneno" />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Password</label>
                       <div className="relative group">
-                        <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input type={showPass ? "text" : "password"} {...register('password', {required: true})} className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-12 text-sm font-bold outline-none focus:border-indigo-500 transition-all" placeholder="••••••••" />
+                        <FiLock className={`absolute left-4 top-1/2 -translate-y-1/2 ${errors.password ? 'text-red-400' : 'text-slate-400'}`} />
+                        <input 
+                          type={showPass ? "text" : "password"} 
+                          {...register('password', { 
+                            required: "Password required",
+                            minLength: { value: 6, message: "Min 6 characters" },
+                            pattern: {
+                              value: /^(?=.*[A-Z])(?=.*[0-9])/,
+                              message: "Need 1 Uppercase & 1 Number"
+                            }
+                          })} 
+                          className={`w-full bg-slate-50 border ${errors.password ? 'border-red-300 focus:border-red-500' : 'border-slate-100 focus:border-indigo-500'} rounded-2xl py-4 pl-12 pr-12 text-sm font-bold outline-none transition-all`} 
+                          placeholder="••••••••" 
+                        />
                         <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-indigo-600 transition-colors">
                           {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
                       </div>
+                      <ErrorMsg name="password" />
                     </div>
                   </div>
 
@@ -309,4 +395,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterForm;

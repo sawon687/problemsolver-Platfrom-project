@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
 import NextAuthProvider from "@/provider/NextAuthProvider";
+import UseQueryProvider from '../provider/UseQueryProvider';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +23,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
       <NextAuthProvider>
+        <UseQueryProvider>
     <html lang="en" >
    
        <body suppressHydrationWarning
@@ -37,6 +39,7 @@ export default function RootLayout({ children }) {
       </body>
       
     </html>
+    </UseQueryProvider>
     </NextAuthProvider> 
     
   );

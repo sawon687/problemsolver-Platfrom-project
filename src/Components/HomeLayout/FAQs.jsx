@@ -1,31 +1,10 @@
 'use client'
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { IoChevronDown, IoHelpCircleOutline, IoBulbOutline, IoPeopleOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
+import { IoChevronDown} from "react-icons/io5";
 
-const FAQs = () => {
-  const faqs = [
-    { 
-      question: "How do I create a profile?", 
-      answer: "It's simple! Click the 'Join Now' button and sign up with your details. Afterward, complete your profile by adding your skills and portfolio to stand out.",
-      icon: <IoHelpCircleOutline className="text-indigo-500" />
-    },
-    { 
-      question: "Can I collaborate with others?", 
-      answer: "Yes! Our platform allows you to find other expert solvers and connect with them directly to collaborate on complex projects.",
-      icon: <IoPeopleOutline className="text-violet-500" />
-    },
-    { 
-      question: "Is there a free plan available?", 
-      answer: "Absolutely! Our free plan allows you to manage up to 3 active projects and gives you access to the basic dashboard. You can upgrade to Pro for larger projects.",
-      icon: <IoShieldCheckmarkOutline className="text-blue-500" />
-    },
-    { 
-      question: "How does the payment method work?", 
-      answer: "Once you successfully submit your work and the buyer reviews it, coins will be credited to your wallet. You can withdraw these as cash later.",
-      icon: <IoBulbOutline className="text-amber-500" />
-    },
-  ];
+const FAQs = ({faqs}) => {
+  
 
   const [openIndex, setOpenIndex] = useState(null);
 
@@ -34,14 +13,14 @@ const FAQs = () => {
   };
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section className="py-24  relative overflow-hidden">
       {/* Background Decorative Element */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-64 h-64 bg-indigo-50 rounded-full blur-[100px] opacity-60" />
 
       <div className="max-w-3xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-black tracking-tight text-slate-900 mb-4">
-            Common Queries
+            Common <span className='text-indigo-600'>Queries</span>
           </h2>
           <p className="text-slate-500 font-medium">Find answers to the most frequently asked questions below.</p>
         </div>

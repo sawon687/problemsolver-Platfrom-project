@@ -5,6 +5,7 @@ const projectColl=connect('projectColl')
 const taskColl = connect("taskColl");
 const userColl=connect('userColl')
 const notificationColl = connect('NotificationColl');
+const requestColl = connect('RequestColl');
 // project details
 export const GET = async (req,{params}) => {
   try {
@@ -18,10 +19,15 @@ export const GET = async (req,{params}) => {
                 );
            }
 
-    const result = await projectColl.findOne({_id:new ObjectId(id)});
+       
+     const [project,request]=await Promise.all([
+         projectColl.findOne({_id:new ObjectId(id)}),
+    requestColl.find({projectId:id}).sort({createdAt:-1}).toArray()
+     ])
+ 
    
     return new Response(
-      JSON.stringify({ data:result, success: true }),
+      JSON.stringify({ result:{project,request}, success: true }),
       { status: 200 }
     );
   } catch (error) {
@@ -51,14 +57,18 @@ export const POST = async (req, { params }) => {
 
 
     const exitProject = await projectColl.findOne({ _id: new ObjectId(id) });
+    console.log('exitProject',exitProject)
     if (!exitProject) {
       return new Response(
         JSON.stringify({ message: 'Project not found', success: false }),
         { status: 404 }
       );
     }
+const buyerId=exitProject.buyerId
 
+console.log('bueyr id',buyerId)
     const buyer = await userColl.findOne({ _id: new ObjectId(exitProject.buyerId) });
+    console.log('buyer',buyer)
     
     if (!buyer) {
       return new Response(

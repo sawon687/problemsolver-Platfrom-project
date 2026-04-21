@@ -7,10 +7,10 @@ const bannerImg = "https://images.unsplash.com/photo-1522071820081-009f0129c71c?
 
 const AboutPage = () => {
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans">
+    <div className="min-h-screen -mt-20 text-slate-900 font-sans">
       
       {/* --- HERO SECTION --- */}
-      <section className="relative pt-20 pb-32 px-6 overflow-hidden">
+      <section className="relative pt-30 pb-32 px-6 overflow-hidden">
         {/* Background Decorative Blobs */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-50 rounded-full blur-[120px] -z-10 opacity-60" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-violet-50 rounded-full blur-[120px] -z-10 opacity-60" />
