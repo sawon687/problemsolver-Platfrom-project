@@ -4,8 +4,9 @@ const taskColl = connect("taskColl");
 
 export async function GET(req) {
     try {
-        const { searchParams } = new URL(req.url);
-        const projectId = searchParams.get('projectId');
+           const url=req?.url || ''
+        const { searchParams } = new URL(url);
+        const projectId =  searchParams.get('projectId');
 
         if (!projectId) {
             return new Response(
@@ -13,7 +14,7 @@ export async function GET(req) {
                     message: 'Project ID is required', 
                     success: false 
                 }), 
-                { status: 400 } // Bad Request
+                { status: 400 }
             );
         }
 

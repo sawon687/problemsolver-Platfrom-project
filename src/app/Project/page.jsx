@@ -28,7 +28,7 @@ const getProject = async (category, search,page) => {
 
     if (!res.ok) throw new Error("Failed to fetch");
     const result = await res.json();
-    console.log("result data", result.result);
+
     return result.result;
   } catch (error) {
     console.error("Fetch error:", error);
@@ -43,7 +43,7 @@ const page = async ({ searchParams }) => {
   const category = params.category || "All";
   const search = params.search || "";
   const page=params.page||1
-  console.log("category", category, "search", search);
+
 
   const project = await getProject(category, search,page);
  const projectData=project.projects;
