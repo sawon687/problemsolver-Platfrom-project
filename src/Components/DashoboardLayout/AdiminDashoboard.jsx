@@ -223,6 +223,7 @@ const AdminDashboard = () => {
                 <span className="text-[10px] font-bold text-slate-400 uppercase">Total</span>
               </div>
             </div>
+            {/* distributionData */}
             <div className="flex-1 space-y-3 w-full ml-0 md:ml-10">
               {distributionData.map((item, i) => (
                 <div key={i} className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100/50">
