@@ -16,12 +16,12 @@ const BuyerDashboard = () => {
   const [time, setTime] = useState(new Date());
 
   const { data: apiResponse, isLoading } = useQuery({
-    queryKey: ['buyerStats', session?.user?.email],
+    queryKey: ['buyerStats', session?.email],
     queryFn: async () => {
       const res = await fetch('/api/Buyer/BuyerData');
       return res.json();
     },
-    enabled: !!session?.user?.email,
+    enabled: !!session?.email,
   });
 
   const { 

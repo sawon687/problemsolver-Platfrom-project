@@ -14,7 +14,7 @@ export async function middleware(req) {
     req, 
     secret: process.env.NEXTAUTH_SECRET
   });
- console.log('token is',token)
+ 
 //   This login not found and then its is
   if (!token) {
     return NextResponse.redirect(new URL("/Login", req.url));

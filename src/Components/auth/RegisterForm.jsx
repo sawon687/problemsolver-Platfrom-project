@@ -88,9 +88,7 @@ const RegisterForm = () => {
         
       
       } else {
-
-          
-                setModal({ 
+           setModal({ 
           open: true, 
           type: 'error', 
           title: 'Register', 

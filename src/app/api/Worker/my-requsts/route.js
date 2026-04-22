@@ -1,6 +1,7 @@
 import connect from "@/lib/dbconnect"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "../../auth/[...nextauth]/route"
+import { authOptions } from '../../auth/[...nextauth]/route';
+
 
 const requestColl = connect('RequestColl');
 // Project requsts

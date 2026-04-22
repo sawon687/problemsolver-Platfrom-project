@@ -8,9 +8,9 @@ import { useForm } from "react-hook-form";
 const UserRequst = ({ id }) => {
 
  
-    console.log('sawibgr',id)
+ 
     const {data:session}=useSession()
-     console.log('sesstion',session)
+    
       const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -24,9 +24,9 @@ const UserRequst = ({ id }) => {
   const handleRequset =async(data) => {
     setLoading(true);
         data.solverId=solverId
-        data.contactEmail=session.user?.email
+        data.contactEmail=session?.email
      // Example: get from session in real app
-        console.log('data',data,id)
+       
     const res = await fetch(`/api/user-project/${id}/request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

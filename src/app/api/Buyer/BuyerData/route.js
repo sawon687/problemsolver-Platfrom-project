@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from '../../auth/[...nextauth]/route';
 
 
+
 export const GET = async (req) => {
   try {
     const session = await getServerSession(authOptions);

@@ -21,16 +21,16 @@ const SolverDashboard = () => {
   }, []);
 
   const { data: apiResponse, isLoading } = useQuery({
-    queryKey: ['solverSummary', session?.user?.email],
+    queryKey: ['solverSummary', session?.email],
     queryFn: async () => {
       const res = await fetch(`/api/Worker/worker-dashboard`);
       return res.json();
     },
-    enabled: !!session?.user?.email,
+    enabled: !!session?.email,
   });
 
   const summary = apiResponse?.result;
-  console.log('summary',summary)
+
 
   const stats = [
     { title: 'Total Requests', value: summary?.totalRequests || 0, icon: <IoSendOutline />, color: 'from-indigo-600 to-indigo-400' },

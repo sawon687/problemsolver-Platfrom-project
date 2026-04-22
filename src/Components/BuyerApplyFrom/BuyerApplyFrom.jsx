@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 const BuyerApplyForm = () => {
   const [loading,setLoading]=useState(false)
   const {data}=useSession()
-     console.log('data',data)
+    
     
    const {
         register,
@@ -18,8 +18,8 @@ const BuyerApplyForm = () => {
           // const userID=data?._id
       const submitBuyerapplication=async(data)=>{
          
-            data.user_id=userID
-            console.log('data',data)
+            data._id=userID
+           
           try {
                setLoading(true)
                const res=await fetch('/api/BuyerInfo',{
