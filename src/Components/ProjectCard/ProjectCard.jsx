@@ -1,11 +1,13 @@
 // ProjectCard.jsx
 import Link from "next/link";
+import { motion, AnimatePresence } from 'framer-motion';
 import React from "react";
 import { IoTimeOutline, IoWalletOutline, IoArrowForwardOutline, IoFlashOutline } from "react-icons/io5";
 import UserRequestModal from '../AllModal/UserRequestModal';
 
 const ProjectCard = ({ project }) => {
   return (
+      
     <div className="group bg-white border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)] rounded-[32px] p-6 flex flex-col justify-between hover:shadow-[0_30px_60px_-15px_rgba(79,70,229,0.15)] hover:border-indigo-100 transition-all duration-500 relative overflow-hidden h-full">
       
       {/* Top Decorative Glow */}
@@ -68,7 +70,9 @@ const ProjectCard = ({ project }) => {
           <IoArrowForwardOutline size={18} className="group-hover/btn:translate-x-1 transition-transform" />
         </Link>
       </div>
+      
     </div>
+   
   );
 };
 
