@@ -185,7 +185,7 @@ const UserTable = ({ user = {} }) => {
           )}
         </button>
       </td>
-
+{/* message modal */}
       <MessageModal
         isOpen={modal.open} 
         type={modal.type} 
