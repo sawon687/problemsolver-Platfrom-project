@@ -69,7 +69,7 @@ const UserTable = ({ user = {} }) => {
       setLoading(false);
     }
   };
-
+// role staus coler
   const getRoleBadge = (role) => {
     switch (role) {
       case 'Admin': return 'bg-rose-50 text-rose-600 border-rose-100 ring-1 ring-rose-200';
