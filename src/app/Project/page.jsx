@@ -20,7 +20,7 @@ const getProject = async (category, search,page) => {
     }
 
   
-    const res = await fetch(`/api/user-project?${searchParams.toString()}`,
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user-project?${searchParams.toString()}`,
       {
         next: { revalidate: 10 },
       },

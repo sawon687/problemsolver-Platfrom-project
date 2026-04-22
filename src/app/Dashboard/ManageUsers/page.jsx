@@ -4,7 +4,7 @@ import UserSkeleton from '../../../Components/LoadinSKelation/UserSkeleton';
 
 // Data fetching function-ti thakbe
 const getuser = async () => {
-  const res = await fetch(`/api/Admin/userInfo`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/Admin/userInfo`, {
     method: "GET",
     cache: "no-cache",
   });
