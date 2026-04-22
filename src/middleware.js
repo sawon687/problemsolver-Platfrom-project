@@ -2,8 +2,8 @@
 import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server'
 
-const adminPaths = ['/Dashboard/manage-users', '/Dashboard/ManageUsers', '/Dashboard/ManageProject']
-const buyerPaths = ['/Dashboard/add-task', '/Dashboard/CreateProject', '/Dashboard/Project-list']
+const adminPaths = ['/Dashboard/manage-users', '/Dashboard/ManageUsers', '/Dashboard/ManageProject','/Dashboard/Profile']
+const buyerPaths = ['/Dashboard/add-task', '/Dashboard/CreateProject', '/Dashboard/Project-list','/Dashboard/Profile']
 const workerPaths = ['/Dashboard/tasks', '/Dashboard/My-Requsts', '', '/Dashboard/Profile']
 
 export async function middleware(req) {
