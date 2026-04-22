@@ -34,7 +34,7 @@ console.log('search',searchValue)
        
         const res = await fetch(`/api/user-project?${params.toString()}`);
         const data = await res.json();
-        setSuggestions(data.result || []);
+        setSuggestions(data?.result?.projects || []);
       } catch (err) {
         console.error(err);
       } finally {

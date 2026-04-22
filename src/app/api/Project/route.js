@@ -6,7 +6,7 @@ export const GET = async () => {
   try {
   
     const result = await projectColl.find().toArray();
-    
+    console.log('result',result)
     return new Response(
       JSON.stringify({ result, success: true }),
       { status: 200 }

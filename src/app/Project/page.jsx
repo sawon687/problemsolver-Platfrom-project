@@ -21,7 +21,8 @@ const getProject = async (category, search,page) => {
 
   
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user-project?${searchParams.toString()}`,
-      {
+      {  method: "GET",
+          cache: "no-cache",
         next: { revalidate: 10 },
       },
     );
@@ -47,7 +48,6 @@ const page = async ({ searchParams }) => {
 
   const project = await getProject(category, search,page);
  const projectData=project.projects;
- console.log('project',projectData)
  const pageNumber=project.totalPage
 
   return (
