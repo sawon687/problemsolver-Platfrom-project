@@ -80,7 +80,7 @@ const Banner = ({banners}) => {
                     {banners[currentIndex].subtitle}
                   </motion.p>
 
-                 <Link className='/Register'>
+                 <Link href='/Register'>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}

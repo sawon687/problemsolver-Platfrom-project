@@ -1,7 +1,8 @@
 import { getServerSession } from 'next-auth';
 import connect from '../../../../lib/dbconnect';
 import { ObjectId } from 'mongodb';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '../../../../lib/auth';
+
 
 const notificationColl = connect('NotificationColl');
 

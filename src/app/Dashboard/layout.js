@@ -1,9 +1,8 @@
-import SidebarItem from "@/Components/SidebarItem/SidebarItem";
 import NextAuthProvider from "@/provider/NextAuthProvider";
 import UseQueryProvider from "@/provider/UseQueryProvider";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import DashboardContainer from '../../Components/Dashboard/DashboardContainer';
+import { authOptions } from '../../lib/auth';
 
 // Dashboard menu link
 const menuConfig = {

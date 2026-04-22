@@ -1,8 +1,8 @@
 import { getServerSession } from 'next-auth';
 import connect from '../../../lib/dbconnect';
-import { authOptions } from '../auth/[...nextauth]/route';
 import { ObjectId } from 'mongodb';
 import { NextResponse } from 'next/server';
+import { authOptions } from '../../../lib/auth';
    const notificationColl =  connect('NotificationColl'); 
 export async function GET(req) {
     try {
