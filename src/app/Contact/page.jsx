@@ -50,8 +50,8 @@ const ContactPage = () => {
             className="lg:col-span-1 space-y-4"
           >
             {[
-              { icon: <IoMailOutline size={24} />, title: "Email Us", detail: "support@racoai.com", sub: "Response within 24 hours" },
-              { icon: <IoCallOutline size={24} />, title: "Call Support", detail: "+880 1234-567890", sub: "Mon-Fri, 9am - 6pm" },
+              { icon: <IoMailOutline size={24} />, title: "Email Us", detail: "islamsawon367@gmail.com", sub: "Response within 24 hours" },
+              { icon: <IoCallOutline size={24} />, title: "Call Support", detail: "+880 1776079464", sub: "Mon-Fri, 9am - 6pm" },
               { icon: <IoLocationOutline size={24} />, title: "Office Location", detail: "Dhaka, Bangladesh", sub: "HQ Tech Hub" }
             ].map((info, i) => (
               <div key={i} className="group bg-white p-8 rounded-[32px] shadow-sm border border-slate-100 hover:border-indigo-100 transition-all hover:shadow-xl hover:shadow-indigo-500/5">

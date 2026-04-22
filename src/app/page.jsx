@@ -91,8 +91,11 @@ export default function Home() {
 
       {/* Newsletter - Indigo/Slate High Contrast */}
       <section className="py-24 px-6 relative z-10">
-        <div className="max-w-6xl mx-auto bg-indigo-600 rounded-[50px] overflow-hidden shadow-[0_30px_60px_-15px_rgba(79,70,229,0.3)] relative">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[80px] -mr-40 -mt-40" />
+        <div className="max-w-7xl mx-auto bg-gray-950 rounded-[50px] overflow-hidden shadow-[0_30px_60px_-15px_rgba(79,70,229,0.3)] relative">
+          <div className="absolute top-0 right-50 left-0 w-96 h-96 bg-indigo-600  opacity-20
+       rounded-full blur-[80px] -mr-40 -mt-40" />
+          <div className="absolute top-0 right-40 w-96 h-96 bg-indigo-600  opacity-20
+       rounded-full blur-[80px] -mr-40 -mt-40" />
           
           <div className="relative z-10 py-20 px-10 md:px-20 text-center md:text-left flex flex-col md:flex-row items-center gap-10">
             <div className="flex-1">

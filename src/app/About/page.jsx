@@ -104,7 +104,7 @@ const AboutPage = () => {
       {/* --- WHY CHOOSE US (FEATURES) --- */}
       <section className="py-32 max-w-7xl mx-auto px-6">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-4">Why RacoAI?</h2>
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-4">Why Aura<span className='text-indigo-600'>.<span className='animate-pulse'>.</span></span>?</h2>
           <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">Experience the Future of Work</p>
         </div>
 

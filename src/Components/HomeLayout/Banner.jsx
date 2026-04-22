@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { IoRocketOutline, IoBriefcaseOutline, IoArrowForward } from "react-icons/io5";
+import Link from 'next/link';
 
 
 
@@ -79,6 +80,7 @@ const Banner = ({banners}) => {
                     {banners[currentIndex].subtitle}
                   </motion.p>
 
+                 <Link className='/Register'>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -86,6 +88,7 @@ const Banner = ({banners}) => {
                   >
                     Get Started Now <IoArrowForward className="group-hover:translate-x-1 transition-transform" />
                   </motion.button>
+                 </Link>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -127,8 +130,8 @@ const Banner = ({banners}) => {
                     Login to Post
                   </button>
                 ) : (data).role !== "buyer" ? (
-                  <button onClick={() => (window.location.href = "/Dashboard/Profile")} className="mt-6 w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">
-                    Become a Buyer
+                  <button onClick={() => (window.location.href = "/Project")} className="mt-6 w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">
+                   Start a Project
                   </button>
                 ) : (
                   <button onClick={() => (window.location.href = "/Dashboard/CreateProject")} className="mt-6 w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">

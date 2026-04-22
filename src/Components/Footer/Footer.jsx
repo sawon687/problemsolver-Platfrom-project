@@ -45,6 +45,24 @@ const Footer = () => {
     '/unauthorized'
   ];
 
+const socialLinks = [
+  {
+    icon: FaFacebookF,
+    url: "https://facebook.com/your-profile",
+  },
+  {
+    icon: FaTwitter,
+    url: "https://twitter.com/your-profile",
+  },
+  {
+    icon: FaLinkedinIn,
+    url: "https://www.linkedin.com/in/md-al-jihad-sawon-6a27482a3/",
+  },
+  {
+    icon: FaGithub,
+    url: "https://github.com/sawon687",
+  },
+];
 
   const shouldHide = hideNavbarPaths.some(path => pathname.startsWith(path));
 
@@ -85,11 +103,13 @@ const Footer = () => {
             </p>
 
             <div className="flex space-x-4">
-              {[FaFacebookF, FaTwitter, FaLinkedinIn, FaGithub].map((Icon, idx) => (
-                <a key={idx} href="#" className="w-11 h-11 flex items-center justify-center rounded-xl bg-slate-900/50 hover:bg-indigo-600 text-slate-400 hover:text-white transition-all duration-300 border border-slate-800 hover:border-indigo-400 shadow-lg">
+              {socialLinks.map((item, idx) =>{
+                const Icon=item.icon
+                 return(
+                <a key={idx} href={item.url} className="w-11 h-11 flex items-center justify-center rounded-xl bg-slate-900/50 hover:bg-indigo-600 text-slate-400 hover:text-white transition-all duration-300 border border-slate-800 hover:border-indigo-400 shadow-lg">
                   <Icon size={20} />
                 </a>
-              ))}
+              )})}
             </div>
           </div>
 
@@ -135,7 +155,7 @@ const Footer = () => {
                   <IoMail className="text-indigo-500 mt-1" size={18} />
                   <div>
                     <p className="text-sm text-white font-semibold">Email Us</p>
-                    <p className="text-xs text-slate-500">hello@aura.io</p>
+                    <p className="text-xs text-slate-500">islamsawon367@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3 group cursor-pointer">

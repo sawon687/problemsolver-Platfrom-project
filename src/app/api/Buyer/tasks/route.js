@@ -4,8 +4,8 @@ const taskColl = connect("taskColl");
 
 export async function GET(req) {
     try {
-           const url=req?.url || ''
-        const { searchParams } = new URL(url);
+       
+        const { searchParams } = new URL(req.url);
         const projectId =  searchParams.get('projectId');
 
         if (!projectId) {

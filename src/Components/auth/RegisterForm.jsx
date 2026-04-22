@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fi';
 import { Loader2, ChevronLeft, EyeOff, Eye, AlertCircle } from 'lucide-react';
 import { signIn } from 'next-auth/react';
+import Logo from '../Logo/Logo';
 
 const countryCodes = [
   { name: "BD", code: "+880" },
@@ -136,10 +137,8 @@ const RegisterForm = () => {
       >
         {/* Left Branding Panel */}
         <div className="md:w-[35%] bg-slate-900 p-10 text-white flex flex-col justify-between relative overflow-hidden">
-          <div className="relative z-10">
-            <div className="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-indigo-500/20">
-              <FiZap size={24} />
-            </div>
+          <div className="relative space-y-5 z-10">
+           <Logo></Logo>
             <h2 className="text-4xl font-black leading-tight tracking-tight">
               {step === 1 ? "Choose Your Path." : "Create Your Profile."}
             </h2>

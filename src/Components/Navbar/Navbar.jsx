@@ -94,7 +94,7 @@ if (isAuthOrDashboard || isNotFound) return null;
                       }`}
                     >
                       {item.name}
-                      {pathname === item.to && <motion.div layoutId="dot" className="w-1 h-1 bg-indigo-600 rounded-full" />}
+                      {pathname === item.to && <motion.div layoutId="dot" className="w-1.5 h-1.5 animate-pulse bg-indigo-600 rounded-full" />}
                     </Link>
                   </li>
                 ))}
