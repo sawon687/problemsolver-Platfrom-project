@@ -28,7 +28,7 @@ const ProjectCardContainer = ({ project }) => {
     useEffect(() => {
        
         if (project) {
-            const timer = setTimeout(() => setIsLoading(false), 800);
+            const timer = setTimeout(() => setIsLoading(false), 100);
             const currentCategory = searchParams.get('category') || 'All';
             setActive(currentCategory);
             return () => clearTimeout(timer);
@@ -90,7 +90,7 @@ const ProjectCardContainer = ({ project }) => {
             {/* --- PROJECT GRID --- */}
             <div className="max-w-[1600px] mx-auto py-12 px-6 lg:px-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="sync">
                         {isLoading ? (
                             // Loading Skeleton State
                             [...Array(9)].map((_, i) => (
