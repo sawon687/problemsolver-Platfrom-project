@@ -94,7 +94,7 @@ const RegisterForm = () => {
           title: 'Register', 
           msg:result.message || "Registration failed", 
         });
-          refetch()
+        
         
      
       }

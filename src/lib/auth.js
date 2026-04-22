@@ -139,6 +139,7 @@ async jwt({ token, user, account }) {
 },
   pages:{
     signIn:'/Login',
+    signIn:'/Register',
     signOut: '/auth/signout',
   }
 }

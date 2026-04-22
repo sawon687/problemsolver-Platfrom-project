@@ -1,7 +1,7 @@
 
 import { getServerSession } from "next-auth";
-import { authOptions } from '../../auth/[...nextauth]/route';
 import connect from '../../../../lib/dbconnect';
+import { authOptions } from '../../../../lib/auth';
 // collections
 const projectColl = connect("projectColl");
 const userColl = connect("userColl");
