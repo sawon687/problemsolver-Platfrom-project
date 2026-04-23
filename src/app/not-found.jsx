@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { IoRocket, IoArrowBack, IoHomeOutline } from "react-icons/io5";
 
-export default function page() {
+export default function NotFound() {
   return (
     <div className="min-h-screen bg-[#020617] flex items-center -mt-20 justify-center px-6 overflow-hidden relative">
       
