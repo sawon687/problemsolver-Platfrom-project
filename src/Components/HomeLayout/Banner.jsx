@@ -29,12 +29,14 @@ const Banner = ({banners}) => {
       <div className="max-w-[1440px] mx-auto px-4 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[550px]">
           
-          {/* Left Side */}
-          <div
-            className="lg:col-span-8 relative rounded-[32px] overflow-hidden shadow-2xl group border border-slate-200"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
+     
+       {/* Left Side */}
+<div
+  className="lg:col-span-8 relative rounded-[32px] overflow-hidden shadow-2xl group border border-slate-200 h-[400px] md:h-[500px] lg:h-full" 
+
+  onMouseEnter={() => setIsPaused(true)}
+  onMouseLeave={() => setIsPaused(false)}
+>
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}

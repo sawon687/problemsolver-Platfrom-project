@@ -10,6 +10,7 @@ import ProfileDropdown from "../ProfileDropdown/ProfileDropdown";
 import SearchModal from "../searchModal/SearchModal";
 import NotificationDropdown from '../AllModal/NotificationDropdown';
 import Logo from '../Logo/Logo';
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 
 const Navbar = () => {
   const { data, status } = useSession();
@@ -103,7 +104,7 @@ if (isAuthOrDashboard || isNotFound) return null;
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-3 relative z-10" ref={profileRef}>
-              
+              {/* <div className='ml-40'><button>bn</button></div> */}
               {/* Premium Search */}
               <button 
                 onClick={() => setSearchOpen(true)}
@@ -206,10 +207,8 @@ if (isAuthOrDashboard || isNotFound) return null;
         {/* Header Section */}
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
-              <IoRocket size={20} />
-            </div>
-            <span className="font-black text-2xl tracking-tighter text-slate-900">RacoAI</span>
+           <Logo></Logo>
+          
           </div>
           <button 
             onClick={() => setMobileOpen(false)} 
@@ -223,10 +222,7 @@ if (isAuthOrDashboard || isNotFound) return null;
         {status === 'authenticated' && (
           <div 
             className="mb-8 md:hidden p-4 bg-slate-50 rounded-3xl border border-slate-100  flex items-center justify-between group cursor-pointer"
-          
-          >
-
-                <Link 
+          > <Link 
             href={'/Dashboard/Profile'}
             
             className="text-4xl font-black tracking-tighter text-slate-400 hover:text-indigo-600 transition-colors"
