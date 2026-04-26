@@ -12,6 +12,7 @@ import NotificationDropdown from '../AllModal/NotificationDropdown';
 import Logo from '../Logo/Logo';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 
 export default function DashboardContainer({ children, session, menuItems }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -169,7 +170,7 @@ export default function DashboardContainer({ children, session, menuItems }) {
                 <Calendar size={14} />
                 <span className="text-[11px] font-bold uppercase tracking-wider">{currentTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
              </div>
-
+                 <LanguageSwitcher></LanguageSwitcher>
              <button onClick={toggleFullscreen} className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all hidden sm:block">
                 <Maximize size={18} />
              </button>

@@ -6,19 +6,24 @@ import { useForm } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Clock, DollarSign, MessageSquare, User, Zap, Sparkles, Layout } from "lucide-react";
 import MessageModal from './MessageModal';
+import { useRouter } from 'next/navigation';
+
 
 const UserRequestModal = ({ id }) => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const router=useRouter()
   const [modal, setModal] = useState({ 
     open: false, 
     type: 'success', 
     title: '', 
     msg: '' 
   });
+
   
   const { register, handleSubmit, reset } = useForm();
+  
 
   const handleRequest = async (data) => {
     setLoading(true);
@@ -67,11 +72,22 @@ const UserRequestModal = ({ id }) => {
     }
   };
 
+
   return (
     <>
       {/* Premium Trigger Button */}
       <button 
-        onClick={() => setIsModalOpen(true)} 
+        onClick={() =>{
+          
+            if(!session)
+          {
+            return router.push('/Login')
+          }
+          
+          setIsModalOpen(true)
+
+
+        }} 
         className="group flex-1 w-full relative bg-indigo-600 overflow-hidden text-white text-[#0f172a] py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all hover:bg-indigo-500 hover:text-white active:scale-95 shadow-xl flex items-center justify-center gap-2"
       >
         <span className="relative z-10 flex items-center gap-2">
