@@ -97,7 +97,7 @@ const SolverDashboard = () => {
     </header>
    
 
-      <main className="max-w-[1600px] mx-auto p-6 md:p-10">
+      <main className="max-w-[1600px] mx-auto p-2 md:p-10">
         
         {/* Banner */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full bg-gradient-to-r from-indigo-700 to-indigo-900 rounded-[3rem] p-8 md:p-12 mb-12 relative overflow-hidden text-white">
@@ -126,7 +126,7 @@ const SolverDashboard = () => {
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
        {/* Active Assignments List */}
-<div className="xl:col-span-2 space-y-8">
+<div className="md:col-span-2 w-full space-y-8">
   <div className="bg-white rounded-[3.5rem] p-8 md:p-12 border border-slate-100 shadow-sm">
     <h2 className="text-2xl font-black text-slate-900 mb-10 flex items-center gap-4">
       <span className="w-3 h-8 bg-indigo-600 rounded-full"></span>
@@ -139,16 +139,17 @@ const SolverDashboard = () => {
           <motion.div 
             key={i} 
             whileHover={{ x: 10 }} 
-            className="p-7 bg-[#FBFBFF] rounded-[2.5rem] border border-transparent hover:border-indigo-100 transition-all flex flex-col md:flex-row justify-between items-center gap-6"
+            className="p-7 bg-[#FBFBFF] rounded-[2.5rem] border border-transparent hover:border-indigo-100
+             transition-all flex flex-col md:flex-row md:justify-between justify-center items-center gap-6"
           >
-            <div className="flex items-center gap-6 w-full">
+            <div className="flex items-center justify-center md:gap-6 w-full">
             
               <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-2xl shadow-sm border border-slate-50">
                 🚀
               </div>
               
               <div className="flex-1">
-                <div className="flex items-center gap-2">
+                <div className="flex md:flex-row flex-col items-center  gap-2">
                   <h4 className="text-lg font-black text-slate-800">
                     {task.name || 'Project Application'}
                   </h4>
@@ -172,7 +173,7 @@ const SolverDashboard = () => {
               </div>
             </div>
 
-          <div className="flex flex-col gap-2 w-full md:w-auto">
+          <div className="flex flex-col justify-center gap-2 w-full md:w-auto">
  <Link href={`/Dashboard/My-Requsts/${task.projectId}/UploadedProject`}> <button className="w-full md:w-48 px-6 py-4 bg-indigo-600 text-white rounded-[1.5rem] text-[11px] font-black uppercase tracking-widest shadow-lg hover:bg-slate-900 transition-all whitespace-nowrap">
     Submit Work
   </button></Link>

@@ -51,7 +51,7 @@ const BuyerDashboard = () => {
       {/* Header */}
       <header className="max-w-7xl mx-auto mb-8">
         <div className="bg-white/70 backdrop-blur-2xl border border-white shadow-xl shadow-indigo-100/20 rounded-[2rem] p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
+          <div className="flex flx-col md:flex-row items-center gap-4">
             <div className="relative">
               <img
                 src={session?.user?.image || "https://ui-avatars.com/api/?name=User"}
@@ -113,14 +113,14 @@ const BuyerDashboard = () => {
               </h3>
               <div className="space-y-4">
                 {projects.map((p, idx) => (
-                  <div key={p._id} className="group flex items-center justify-between p-5 bg-slate-50 hover:bg-white border hover:border-indigo-100 rounded-3xl transition-all">
+                  <div key={p._id} className="group flex  flex-col md:flex-row items-center justify-between p-5 bg-slate-50 hover:bg-white border border-indigo-100  hover:border-indigo-400 rounded-3xl transition-all">
                     <div className="flex items-center gap-5">
                       <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-slate-100 text-indigo-600 font-bold">
                         {idx + 1}
                       </div>
                       <div>
                         <h4 className="font-bold text-slate-800">{p.ProjectTitle}</h4>
-                        <div className="flex gap-3 mt-1">
+                        <div className="flex flex-col md:flex-row gap-3 mt-1">
                            <span className="text-[10px] font-black text-slate-400 uppercase">Status: {p.status}</span>
                            <span className="text-[10px] font-black text-indigo-500 uppercase">Budget: ${p.ProjectBudget || '0'}</span>
                         </div>
@@ -139,7 +139,7 @@ const BuyerDashboard = () => {
                <h4 className="text-lg font-black mb-6 flex items-center gap-2">
                   <ClipboardList size={20} className="text-indigo-400" /> Task Overview
                </h4>
-               <div className="grid grid-cols-2 gap-4">
+               <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                   <TaskBox label="Pending" value={pendingTask} icon={<Clock4 size={14}/>} color="text-orange-400" />
                   <TaskBox label="Submitted" value={submittedTask} icon={<Send size={14}/>} color="text-blue-400" />
                   <TaskBox label="Accepted" value={acceptTask} icon={<CheckCircle2 size={14}/>} color="text-emerald-400" />
@@ -184,7 +184,7 @@ const StatCard = ({ title, value, color, icon, subText }) => {
 
 const TaskBox = ({ label, value, icon, color }) => (
   <div className="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-md">
-    <div className={`flex items-center gap-2 mb-1 ${color}`}>
+    <div className={`flex  items-center gap-2 mb-1 ${color}`}>
         {icon}
         <span className="text-[10px] font-black uppercase tracking-tighter">{label}</span>
     </div>
