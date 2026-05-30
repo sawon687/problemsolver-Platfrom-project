@@ -99,19 +99,83 @@ Aura is a Fiverr-inspired full-stack freelance marketplace platform where Buyers
 ## 📂 Project Structure
 
 ```text
-client/
-├── components/
-├── pages/
-├── hooks/
-├── layouts/
-└── services/
-
-server/
-├── controllers/
-├── routes/
-├── middleware/
-├── models/
-└── services/
+app/
+│
+├── layout.js                     # ⭐ MAIN LAYOUT (ROOT LAYOUT)
+├── page.js                       # Home / Landing
+├── globals.css
+├── not-found.jsx
+│
+│
+├── (auth)/                       # Public auth routes (clean URL)
+│   ├── login/
+│   │   └── page.jsx
+│   ├── register/
+│   │   └── page.jsx
+│
+│
+├── dashboard/                   # ⭐ MAIN DASHBOARD AREA
+│   ├── layout.jsx               # Dashboard layout (sidebar + navbar)
+│   ├── page.jsx                 # Dashboard home
+│   │
+│   ├── create-project/
+│   │   └── page.jsx
+│   │
+│   ├── manage-project/
+│   │   └── page.jsx
+│   │
+│   ├── manage-users/
+│   │   └── page.jsx
+│   │
+│   ├── profile/
+│   │   └── page.jsx
+│   │
+│   ├── my-requests/
+│   │   └── page.jsx
+│   │
+│   ├── project-list/
+│   │   └── page.jsx
+│   │
+│   ├── user-project/
+│   │   └── page.jsx
+│
+│
+├── about/
+│   └── page.jsx
+│
+├── contact/
+│   └── page.jsx
+│
+├── blog/
+│   └── page.jsx
+│
+├── project/
+│   └── page.jsx
+│
+├── notifications/
+│   └── page.jsx
+│
+├── unauthorized/
+│   └── page.jsx
+│
+│
+├── api/                         # ⭐ BACKEND (Route Handlers)
+│   ├── auth/
+│   │   ├── login/route.js
+│   │   ├── register/route.js
+│   │   ├── session/route.js
+│   │   └── logout/route.js
+│   │
+│   ├── projects/
+│   │   ├── route.js
+│   │   ├── create/route.js
+│   │   ├── update/route.js
+│   │   └── delete/route.js
+│   │
+│   ├── users/
+│   │   ├── route.js
+│   │   └── update/route.js
+│
 ```
 
 ## ⚙️ Installation
