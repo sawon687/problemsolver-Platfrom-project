@@ -74,25 +74,21 @@ Aura is a Fiverr-inspired full-stack freelance marketplace platform where Buyers
 
 ## 🛠 Tech Stack
 
-### Frontend
+🚀 Final Tech Stack (UPDATED VERSION)
+***Frontend
+Next.js (App Router)
+React.js
+JavaScript
+Tailwind CSS
+Framer Motion
+Axios
+*** Backend (inside Next.js)
+Next.js Route Handlers (app/api)
+JWT Authentication
+Middleware (route protection)
+🗄 Database
+MongoDB
 
-* Next.js
-* React.js
-* JavaScript
-* Tailwind CSS
-* Framer Motion
-* Axios
-
-### Backend
-
-* Node.js
-* Express.js
-* JWT Authentication
-
-### Database
-
-* MongoDB
-* Mongoose
 
 ---
 
